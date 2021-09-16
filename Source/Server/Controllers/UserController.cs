@@ -150,9 +150,17 @@ namespace Wishlist.Server.Controllers
 
             bool sendEmailAlert = existingUser.Email != person.Email;
             bool isNewAdminStatus = existingUser.IsAdmin != person.IsAdmin;
-            bool isNewPassword = !string.IsNullOrEmpty(person.ClearPassword);
+            bool isNewPassword = !string.IsNullOrWhiteSpace(person.ClearPassword);
 
-            existingUser.MapFromUser(person);
+            existingUser.Email = person.Email;
+            existingUser.FirstName = person.FirstName;
+            existingUser.LastName = person.LastName;
+            existingUser.ListNote = person.ListNote;
+            existingUser.NickName = person.NickName;
+            existingUser.GroupId = person.GroupId;
+            existingUser.PictureData = person.PictureData;
+            existingUser.PictureType = person.PictureType;
+            existingUser.IsAdmin = person.IsAdmin;
 
             if (isNewPassword)
             {
