@@ -1,0 +1,80 @@
+﻿@page "/login"
+@page "/login/{isExpired}"
+@layout AuthLayout
+@inject NavigationManager navigationManager
+@inject CustomStateProvider authStateProvider
+@inject DialogService dialogService
+@inject HttpClient httpClient
+@inject IToastService toastService
+
+<div class="card rounded-corners max-width-limited mx-auto">
+    <h1 class="card-header">Wishlist Website</h1>
+    <div class="card-body">
+
+        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(1.5)">
+            <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="loginRequest">
+                <DataAnnotationsValidator />
+
+                @if (!string.IsNullOrEmpty(problem))
+                {
+                    <div class="alert-danger">ERROR! @problem</div>
+                }
+                else if (!loading)
+                {
+                    if (Users.Count == 0)
+                    {
+                        <div class="alert alert-primary">No users yet! Register to be the first.</div>
+                        usersExist = false;
+                    }
+                    else
+                    {
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(1.5)">
+                            <div class="form-group">
+                                <label for="inputUsername">You are?</label>
+
+                                <InputSelect @bind-Value="loginRequest.UserName" class="form-control">
+                                    <option value="">...</option>
+                                    @foreach (var usr in Users)
+                                            {
+                                        <option value="@usr.Value">@usr.DisplayText</option>
+                                            }
+                                </InputSelect>
+                                <ValidationMessage For="(() => loginRequest.UserName)" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputPassword">Password</label>
+                                <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="loginRequest.Password" />
+                                <ValidationMessage For="@(() => loginRequest.Password)" />
+                            </div>
+                        </Animate>
+                    }
+                }
+
+                <br>
+                @if (usersExist)
+                {
+                <button disabled="@loading" class="btn btn-primary" type="submit">
+                    @if (loading)
+                    {
+                        <span class="spinner-border spinner-border-sm mr-1"></span>
+                    }
+                    Login
+                </button>
+                }
+                <NavLink href="register" class="btn btn-link">Register</NavLink>
+                @if (loginRequest != null && !string.IsNullOrEmpty(loginRequest.UserName))
+                {
+                    <button @onclick="@(() => SendPasswordLink())" class="btn btn-link" type="button">Forgot Password?</button>
+                }
+            </EditForm>
+        </Animate>
+    </div>
+</div>
+
+<!-- credits -->
+<div class="text-center mt-4">
+    <p>
+        Need help?  Contact Dan for assistance.
+    </p>
+</div>

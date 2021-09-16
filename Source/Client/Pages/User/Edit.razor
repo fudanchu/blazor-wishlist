@@ -1,0 +1,40 @@
+﻿@page "/user/edit/{Id}"
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+@inject IToastService toastService 
+
+<AuthorizeView Policy="@Policies.CanEditUsers">
+    <Authorized Context="Auth">
+
+        <h3>Edit</h3>
+
+        <Form ButtonText="Update" user="user"
+              OnValidSubmit="@EditUser" />
+
+    </Authorized>
+    <NotAuthorized>
+        You cannot edit users!
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Parameter] public string id { get; set; }
+    ApplicationUser user = new ApplicationUser();
+
+    protected async override Task OnParametersSetAsync()
+    {
+        user = await httpClient.GetFromJsonAsync<ApplicationUser>($"api/user/{id}");
+    }
+
+    async Task EditUser()
+    {
+        var response = await httpClient.PutAsJsonAsync($"api/user/", user);
+        if (response.IsSuccessStatusCode)
+        {
+            toastService.ShowSuccess("Updated Successfully!");
+            navigationManager.NavigateTo("users");
+        } else {
+            toastService.ShowError(await response.Content.ReadAsStringAsync(), "Error updating!");
+        }
+    }
+}

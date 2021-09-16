@@ -1,0 +1,84 @@
+﻿@inject HttpClient httpClient
+@inject IToastService toastService
+@inject DialogService dialogService
+
+<EditForm Model="@viewList">
+    @if (loadFailed)
+    {
+        <div class="grid-container">
+            <div class="grid-item"><img src="/images/AngryGift.png" /></div>
+            <div class="grid-item">
+                <span class="alert-danger">Loading failed!  :(</span>
+                <p class="alert-danger">This list may not exist!</p>
+            </div>
+        </div>
+    }
+    else if (isLoading)
+    {
+        <img src="images/HoppingGift_30px.gif" class="pr-2" />
+    }
+    else if (activePerson != null)
+    {
+        if (isViewingOwnList)
+        {
+            <h3>Edit Your List</h3>
+            <ListEditor UserId="@LoggedInUserId" ListNote="@activePerson.ListNote"></ListEditor>
+        }
+        else if (viewList != null && viewList.Count == 0)
+        {
+            <h3>@activePerson.DisplayFullName()'s List</h3>
+            <text>No items in this list!</text>
+        }
+        else
+        {
+            <h3>@activePerson.DisplayFullName()'s List</h3>
+            <table class="table highlight-on-hover">
+                <thead>
+                    <tr>
+                        <th>Gift Name</th>
+                        <th>Description</th>
+                        <th>Check Off?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var gift in viewList)
+                    {
+                        <tr>
+                            <td>
+                                @if (UrlValidation.IsValidUrl(gift.WebLink))
+                                {
+                                    <a href="@gift.WebLink" target="_blank">@gift.Name</a>
+                                }
+                                else
+                                {
+                                    @gift.Name
+                                }
+                            </td>
+                            <td>@gift.Description</td>
+                            @if (string.IsNullOrEmpty(gift.UserBuyingId))
+                            {
+                                <td><button class="btn btn-danger" @onclick="@(() => CheckOff(gift, LoggedInUserId))">Check Off</button></td>
+                            }
+                            else if (gift.UserBuyingId == LoggedInUserId)
+                            {
+                                <td><button class="btn btn-primary" title="Undo?" @onclick="@(() => ReverseCheckOff(gift))">You got it!</button></td>
+                            }
+                            else
+                            {
+                                <td>@gift.UserBuyingDisplayName got it.</td>
+                            }
+                        </tr>
+                    }
+                    @if (!string.IsNullOrEmpty(activePerson.ListNote))
+                    {
+                    <tr>
+                        <td colspan="3" class="list-note">
+                            NOTE: @activePerson.ListNote
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+</EditForm>

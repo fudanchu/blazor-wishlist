@@ -1,0 +1,27 @@
+﻿<div class="alert" role="alert">
+    <span class="oi oi-cart mr-2" aria-hidden="true"></span>
+    <strong>@Title</strong>
+
+    @if (Users != null && Users.Count > 0)
+    {
+        <div class="scroll-container">
+            @foreach (var person in Users.OrderByDescending(u=>OnlineUsers.Contains(u.Id)))
+            {
+                if (person != null)
+                {
+                    <span style="position:relative">
+                        <a class="user-image-container @person.ActiveClass" @onclick="@(() => UpdateActiveUserId(person.Id))" title="@person.DisplayName()">
+                        <img class="@person.ActiveClass user-image" src="@person.RenderPicture()"><span class="user-list-count">@person.ListCount</span>
+                    </a>
+                </span>
+                }
+            }
+        </div>
+    }
+    else
+    {
+        <Animate Animation="Animations.FadeIn" Duration="TimeSpan.FromSeconds(5)">
+            <div class="alert alert-secondary">Loading wishlists...</div>
+        </Animate>
+    }
+</div>

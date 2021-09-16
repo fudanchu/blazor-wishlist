@@ -1,0 +1,17 @@
+﻿@inherits LayoutComponentBase
+
+<BlazoredToasts InfoIcon="fa fa-info-circle"
+                WarningIcon="fa fa-exclamation-triangle"
+                SuccessIcon="fa fa-thumbs-up"
+                ErrorIcon="fa fa-frown"
+                IconType="IconType.FontAwesome" />
+
+<div class="main">
+    <div class="app-container">
+        <div class="col-md-6 offset-md-3 mt-5">
+            @Body
+        </div>
+    </div>
+</div>
+
+<RadzenDialog/>

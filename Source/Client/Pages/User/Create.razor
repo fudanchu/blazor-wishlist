@@ -1,0 +1,26 @@
+﻿@page "/user/create"
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+
+<AuthorizeView Policy="@Policies.CanCreateUsers">
+    <Authorized Context="Auth">
+
+        <h3>Create</h3>
+
+        <Form ButtonText="Create User" user="@user"
+              OnValidSubmit="@CreateUser" />
+
+    </Authorized>
+    <NotAuthorized>
+        You cannot edit users!
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    ApplicationUser user = new ApplicationUser();
+    async Task CreateUser()
+    {
+        await httpClient.PostAsJsonAsync("api/user", user);
+        navigationManager.NavigateTo("users");
+    }
+}

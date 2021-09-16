@@ -1,0 +1,78 @@
+﻿@page "/user/profile"
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+@inject IToastService toastService
+@inject AuthenticationStateProvider authStateProvider
+
+<AuthorizeView>
+	<Authorized>
+
+		<h3>Your Profile</h3>
+
+		@if (isInitializing || user == null)
+		{
+			<text>Loading...</text>
+		}
+		else
+		{
+			@if (user.PictureData == null)
+			{
+				<div class="alert alert-success">Your profile exists, add a photo below and click Update to complete it!</div>
+			}
+
+			<Animate Animation="Animations.ZoomIn" Duration="TimeSpan.FromSeconds(0.5)">
+				<Form ButtonText="Update" user="user"
+					OnValidSubmit="@EditUser" />
+			</Animate>
+
+		}
+	</Authorized>
+	<NotAuthorized>
+		<RedirectToLogin></RedirectToLogin>
+	</NotAuthorized>
+</AuthorizeView>
+
+@code {
+	ApplicationUser user = new ApplicationUser();
+	bool isInitializing = true;
+
+	protected async override Task OnParametersSetAsync()
+	{
+		var authState = await authStateProvider.GetAuthenticationStateAsync();
+		var userClaims = authState.User;
+
+		if (userClaims.Identity.IsAuthenticated)
+		{
+			var id = userClaims.GetUserId();
+            try
+            {
+                user = await httpClient.GetFromJsonAsync<ApplicationUser>($"api/user/{id}");
+            } 
+            catch
+            {
+                //HACK: when timed out the user get fails but
+                //on client side we don't seem to know session expired
+				navigationManager.NavigateTo(Globals.LoginUrlSessionExpired);
+            }
+		}
+		else
+		{
+			navigationManager.NavigateTo(Globals.LoginUrl);
+		}
+		isInitializing = false;
+	}
+
+	async Task EditUser()
+	{
+		var result = await httpClient.PutAsJsonAsync($"api/user/", user);
+		if (result.IsSuccessStatusCode)
+		{
+			toastService.ShowSuccess("Updated Successfully!");
+			navigationManager.NavigateTo("");
+		}
+		else
+		{
+			toastService.ShowSuccess("Failed!", result.ReasonPhrase);
+		}
+	}
+}

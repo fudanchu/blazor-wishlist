@@ -1,0 +1,78 @@
+﻿@page "/gifts"
+@inject HttpClient httpClient
+@inject DialogService dialogService
+@inject NavigationManager navigationManager
+@attribute [Authorize(Policy = Policies.CanViewAllGifts)]
+
+<h3>
+	Gift Management
+
+	<span style="float: right">
+		<input placeholder="Filter?" class="max-w100-control form-control" style="display: inline"
+			   @bind-value="filterText" @bind-value:event="oninput" 
+			   @onkeyup="@FilterGifts" />
+		@if (gifts != null && gifts.Items != null && gifts.Items.Count != 0)
+		{
+			<select class="form-control" @onchange="@AdjustPageSize"
+				style="width: 75px; display: inline">
+				@foreach (var size in pageSizes)
+				{
+					<option value="@size">@size</option>
+				}
+			</select>
+
+			@for (int x = 1; x <= gifts.TotalPages; x++)
+			{
+				var pageNum = x;
+				bool isActiveButton = pageNum == gifts.PageIndex;
+				<button @onclick="(() => GetGiftsForPageX(pageNum))"
+				class="btn @(isActiveButton ? "btn-secondary disabled" : "btn-primary")">
+					@pageNum
+				</button>
+			}
+			<span style="margin-left: 10px">Page @gifts.PageIndex of @gifts.TotalPages</span>
+		}
+	</span>
+</h3>
+<br>
+
+@if (gifts == null || gifts.Items == null)
+{
+	<text>Loading...</text>
+}
+else if (gifts.Items.Count == 0)
+{
+	<text>No Records Found.</text>
+}
+else
+{
+	<table class="table highlight-on-hover">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Gift Info</th>
+				<th>Asking</th>
+				<th>Buying</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var gift in gifts.Items)
+			{
+				<tr>
+					<td>@gift.Id</td>
+					<td>@gift.Name, @gift.Description, @gift.WebLink</td>
+					<td>@gift.UserAskingDisplayName</td>
+					<td>@gift.UserBuyingDisplayName</td>
+					<td>
+						<AuthorizeView Policy="@Policies.CanEditAllGifts">
+							<Authorized Context="Auth">
+								<button class="btn btn-danger" @onclick="@(() => Delete(gift))">Delete</button>
+							</Authorized>
+						</AuthorizeView>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}

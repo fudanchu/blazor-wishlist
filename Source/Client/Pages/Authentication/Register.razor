@@ -1,0 +1,60 @@
+﻿@page "/register"
+@layout AuthLayout
+@inject NavigationManager navigationManager
+@inject CustomStateProvider authStateProvider
+@inject IToastService toastService
+
+<h1 class="h2 font-weight-normal login-title">
+    Register
+    <a href="login" style="float: right; margin-top: 19px; font-size: 1rem; line-height: 1.2">Already have an account? Click here to login</a>
+</h1>
+<EditForm class="form-signin text-center" OnValidSubmit="OnSubmit" Model="registerRequest">
+    <DataAnnotationsValidator />
+
+    <label for="inputAuthCode" class="sr-only">Authorization Code</label>
+    <InputText id="inputAuthCode" class="form-control" placeholder="Authorization Code?" autofocus @bind-Value="@registerRequest.AuthorizationCode" />
+    <ValidationMessage For="@(() => registerRequest.AuthorizationCode)" />
+
+    <label for="inputEmail" class="sr-only">Email</label>
+    <InputText id="inputEmail" class="form-control" placeholder="Email like dan@email.com" autofocus @bind-Value="@registerRequest.Email" />
+    <ValidationMessage For="@(() => registerRequest.Email)" />
+
+    <label for="inputFirstName" class="sr-only">First Name</label>
+    <InputText id="inputFirstName" class="form-control" placeholder="First Name like Daniel" autofocus @bind-Value="@registerRequest.FirstName" />
+    <ValidationMessage For="@(() => registerRequest.FirstName)" />
+
+    <label for="inputLastName" class="sr-only">Last Name</label>
+    <InputText id="inputLastName" class="form-control" placeholder="Last Name like Smith" autofocus @bind-Value="@registerRequest.LastName" />
+    <ValidationMessage For="@(() => registerRequest.LastName)" />
+
+    <label for="inputNickName" class="sr-only">Nick Name</label>
+    <InputText id="inputNickName" class="form-control" placeholder="(optional) Nick Name like Dan" autofocus @bind-Value="@registerRequest.NickName" />
+    <ValidationMessage For="@(() => registerRequest.NickName)" />
+
+    <label for="inputPassword" class="sr-only">Password</label>
+    <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="@registerRequest.Password" />
+    <ValidationMessage For="@(() => registerRequest.Password)" />
+
+    <label for="inputPasswordConfirm" class="sr-only">Password Confirmation</label>
+    <InputText type="password" id="inputPasswordConfirm" class="form-control" placeholder="Password Confirmation" @bind-Value="@registerRequest.PasswordConfirm" />
+    <ValidationMessage For="@(() => registerRequest.PasswordConfirm)" />
+
+    <button class="btn btn-lg btn-primary m-3" type="submit">Create User</button>
+</EditForm>
+
+@functions{
+    RegisterRequest registerRequest { get; set; } = new RegisterRequest();
+
+    async Task OnSubmit()
+    {
+        try
+        {
+            await authStateProvider.Register(registerRequest);
+            navigationManager.NavigateTo("user/profile");
+        }
+        catch (Exception ex)
+        {
+            toastService.ShowError(ex.Message);
+        }
+    }
+}

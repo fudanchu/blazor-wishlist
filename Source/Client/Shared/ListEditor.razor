@@ -1,0 +1,102 @@
+﻿@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+@inject DialogService dialogService
+@inject ICommonService commonService
+
+<EditForm Model="@gift" OnValidSubmit="@ProcessGift">
+	<DataAnnotationsValidator />
+	<div class="form-group">
+		<div>
+			<InputText placeholder="Gift Name (required)" @bind-Value="@gift.Name" />
+			<ValidationMessage For="@(() => gift.Name)" />
+		</div>
+	</div>
+	<div class="form-group ">
+		<div>
+			<div>
+				<InputText placeholder="Description?" @bind-Value="@gift.Description" />
+				<ValidationMessage For="@(() => gift.Description)" />
+			</div>
+		</div>
+	</div>
+	<div class="form-group ">
+		<div>
+			<div>
+				<InputText placeholder="Link?" class="max-w100-control" @bind-Value="@gift.WebLink" />
+				<ValidationMessage For="@(() => gift.WebLink)" />
+			</div>
+		</div>
+	</div>
+	<div class="form-group ">
+		<div>
+			<div>
+				<InputNumber placeholder="Cost?" class="max-w70-control" @bind-Value="@gift.Cost" />
+				<ValidationMessage For="@(() => gift.Cost)" />
+			</div>
+		</div>
+	</div>
+	<input type="hidden" id="UserAskingId" value="@gift.UserAskingId" />
+
+	<button type="submit" class="btn @buttonClass">
+		@buttonText
+	</button>
+</EditForm>
+
+@if (gifts == null)
+{
+	<text>Loading your list...</text>
+}
+else if (gifts.Length == 0)
+{
+	<text>No gifts yet!</text>
+}
+else
+{
+	<table class="table highlight-on-hover">
+		<thead>
+			<tr>
+				<th>Gift Name</th>
+				<th>Description</th>
+				<th>Edit/Delete</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (Gift gift in gifts)
+			{
+				<tr>
+					<td>
+						@if (UrlValidation.IsValidUrl(gift.WebLink))
+						{
+							<a href="@gift.WebLink" target="_blank">@gift.Name</a>
+						}
+						else
+						{
+							@gift.Name
+						}
+					</td>
+					<td>
+						@if (gift.Cost.HasValue && gift.Cost > 0)
+						{
+							<span>
+								[@gift.DisplayCost]
+							</span>
+						}
+						@gift.Description
+					</td>
+					<td>
+						<button @onclick="@(() => EnterEditState(gift))" class="btn btn-primary">
+							<span class="fas fa-fw fa-pencil-alt"></span>
+						</button>
+						<button @onclick="@(() => Delete(gift))" class="btn btn-danger">
+							<span class="fas fa-fw fa-trash-alt"></span>
+						</button>
+					</td>
+				</tr>
+			}
+			@if (!string.IsNullOrEmpty(ListNote))
+			{
+				<tr><td colspan="3" title="This is set under your Profile" class="list-note">Your list note: @ListNote</td></tr>
+			}
+		</tbody>
+	</table>
+}

@@ -1,0 +1,56 @@
+﻿@inject DialogService dialogService
+
+<p>@photoNote</p>
+
+<RadzenCard Style="margin-bottom: 20px; background-color: transparent">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <Cropper MaxCropedHeight="90" MaxCropedWidth="80"
+                             AspectRatio="1.125" AnimeGifEnable="false"
+                             CropperHeight="120" RequireAspectRatio="true"
+                             @ref="cropper"
+                             InputId="UserProfilePhoto"
+                             ImageFile="UploadedImage"
+                             @bind-Ratio="ratio"></Cropper>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                        <span style="margin-right: 5px;">Zoom In?</span> 
+                        <input type="range" min="100" max="1000" value="@(ratio*100)" @oninput="OnRatioChange" title="Drag to adjust zoom" />
+                    Ratio: @ratio
+                </div>
+            </div>
+        </div>
+    </div>
+</RadzenCard>
+<div class="row">
+    <div class="col-md-12">
+        <RadzenButton class="btn-primary" Click="OnCropCompleted" Text="DONE" />
+        <RadzenButton class="btn-secondary" Click="@((args) => dialogService.Close(null))" ButtonStyle="ButtonStyle.Secondary" Text="Nevermind" />
+    </div>
+</div>
+
+@code {
+    public string base64Image { get; set; }
+
+    [Parameter]
+    public IBrowserFile UploadedImage { get; set; }
+
+    Cropper cropper;
+    double ratio = 1;
+    string photoNote = "Note: pic will be resized to 80w by 90h pixels";
+
+    void OnRatioChange(ChangeEventArgs args)
+    {
+        ratio = int.Parse(args.Value.ToString()) / 100.0;
+    }
+    async Task OnCropCompleted()
+    {
+        var croppedPic = await cropper.GetCropedResult();
+        base64Image = await croppedPic.GetBase64Async();
+        dialogService.Close(base64Image);
+    }
+}

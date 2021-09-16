@@ -1,0 +1,118 @@
+﻿@page "/users"
+@inject HttpClient httpClient
+@inject IToastService toastService
+@inject NavigationManager navigationManager
+@inject DialogService dialogService
+
+<AuthorizeView Policy="@Policies.CanCreateUsers">
+	<Authorized>
+		<h3 style="display: inline-block">
+			User Management
+			<span style="float: right" class="form-group ml-5">
+				<input placeholder="Filter?" class="max-w100-control form-control" style="display: inline"
+					   @bind-value="filterText" @bind-value:event="oninput"
+					   @onkeyup="@FilterUsers" />
+				@if (users != null && users.Items != null && users.Items.Count != 0)
+				{
+					<select class="form-control" @onchange="@AdjustPageSize"
+						style="width: 75px; display: inline">
+						@foreach (var size in pageSizes)
+						{
+							<option value="@size">@size</option>
+						}
+					</select>
+
+					@for (int x = 1; x <= users.TotalPages; x++)
+					{
+						var pageNum = x;
+						bool isActiveButton = pageNum == users.PageIndex;
+						<button @onclick="(() => GetUsersForPageX(pageNum))"
+						class="btn @(isActiveButton ? "btn-secondary disabled" : "btn-primary")">
+							@pageNum
+						</button>
+					}
+					<span style="margin-left: 10px; margin-right: 10px">Page @users.PageIndex of @users.TotalPages</span>
+				}
+
+				<a class="btn btn-success" href="user/create"><i class="oi oi-plus"></i> Create User</a>
+				<a class="btn btn-primary" href="gifts">View Gifts</a>
+			</span>
+		</h3>
+		<br>
+
+		@if (users == null || users.Items == null)
+		{
+			<text>Loading...</text>
+		}
+		else if (users.Items.Count == 0)
+		{
+			<text>No Records Found.</text>
+		}
+		else
+		{
+			<Animate Animation="Animations.Fade" Duration="TimeSpan.FromSeconds(0.5)">
+
+			<table class="table highlight-on-hover">
+				<thead>
+					<tr>
+						<th>Id/Email</th>
+						<th>Name</th>
+						<th>Pic</th>
+						<th>Last List Update</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var person in users.Items)
+					{
+						<tr>
+							<td>
+								<a href="#" @onclick="@(() => Impersonate(person.Id))">@person.Id</a><br />
+								@person.Email
+							</td>
+							<td>
+								<div style="float: left">
+									@if (person.IsAdmin)
+									{
+										<span class="fa fa-id-badge" style="
+                                        font-size: xx-large;
+                                        color: yellow;
+                                        margin-right: 5px;
+                                        margin-top: 10px"></span>
+									}
+								</div>
+								<div>
+									@person.DisplayFullName()<br />(@person.UserName)
+								</div>
+							</td>
+							<td>
+								<img class="user-image" src="@person.RenderPicture()">
+							</td>
+							<td>
+								@if (!(person.LastListUpdate.Year == 1))
+								{
+									<span title="@person.LastListUpdate">@person.LastListUpdate.ToShortDateString()</span>
+								}
+							</td>
+							<td>
+								<a class="btn btn-success mr-2" href="user/edit/@person.Id">Edit</a>
+								@if (!(context.User.Identity.Name == person.UserName))
+								{
+									<button class="btn btn-danger" @onclick="@(() => Delete(person))">Delete</button>
+									<button class="btn btn-primary" @onclick="@(() => Impersonate(person.Id))">Impersonate</button>
+								}
+							</td>
+						</tr>
+					}
+
+				</tbody>
+			</table>
+
+			</Animate>
+		}
+
+	</Authorized>
+	<NotAuthorized>
+		Nothing for you to see here...
+	</NotAuthorized>
+</AuthorizeView>

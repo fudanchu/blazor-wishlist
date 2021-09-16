@@ -1,0 +1,26 @@
+﻿@inject NavigationManager navigationManager
+@inject CustomStateProvider authStateProvider
+
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+    <div class="navbar-nav">
+        <AuthorizeView Roles="@Roles.Admin">
+            <Authorized Context="Auth">
+                <NavLink href="users" class="nav-item nav-link">Manage</NavLink>
+            </Authorized>
+        </AuthorizeView>
+        <NavLink href="" Match="NavLinkMatch.All" class="nav-item nav-link">Home</NavLink>
+        <NavLink href="/user/profile" class="nav-item nav-link">Your Profile</NavLink>
+        <NavLink @onclick="@LogoutClick" class="nav-item nav-link">Logout</NavLink>
+    </div>
+</nav>
+
+@code{
+    [CascadingParameter]
+    Task<AuthenticationState> AuthenticationState { get; set; }
+
+    async Task LogoutClick()
+    {
+        await authStateProvider.Logout();
+        navigationManager.NavigateTo("/login");
+    }
+}
