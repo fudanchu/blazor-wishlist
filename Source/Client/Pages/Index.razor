@@ -42,12 +42,6 @@
 				<ChatBox OnlineUsersUpdated="@GetOnlineUsers"
 				 PhotoGridComponent="@PhotoGridComponent" />
 
-				<RadzenChart>
-					<RadzenColumnSeries Data="@userListCounts" CategoryProperty="FirstName" ValueProperty="ListCount"  Title="List Count" />
-					<RadzenValueAxis Min="0" />
-					<RadzenLegend Visible="false" />
-				</RadzenChart>
-
 				</Animate>
 			}
 		}

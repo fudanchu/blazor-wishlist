@@ -8,7 +8,7 @@
 <EditForm Model="@user" OnValidSubmit="@OnValidSubmit" style="min-height: 500px">
 	<DataAnnotationsValidator />
 	<div class="form-group">
-		<label>Family Id :</label>
+		<label>Group Id :</label>
 		<div>
 			<InputNumber @bind-Value="@user.GroupId" />
 			<ValidationMessage For="@(() => user.GroupId)" />

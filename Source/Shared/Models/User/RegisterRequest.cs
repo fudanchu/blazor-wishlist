@@ -31,7 +31,7 @@ namespace Wishlist.Shared.Models.User
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match!")]
         public string PasswordConfirm { get; set; }
 
-        //TODO: remove or utilize if a family-oriented system is desired
+        //TODO: remove or utilize if a user-grouped system is desired
         public int GroupId { get; set; }
     }
 }

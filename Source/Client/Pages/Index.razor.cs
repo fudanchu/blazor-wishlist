@@ -12,15 +12,8 @@ using Wishlist.Shared.Utility;
 
 namespace Wishlist.Client.Pages
 {
-    class DataItem
-    {
-        public string FirstName { get; set; }
-        public int ListCount { get; set; }
-    }
     public partial class Index
     {
-        DataItem[] userListCounts;
-
         private string activeUserId { get; set; }
 
         protected List<ApplicationUserDTO> Users { get; set; }
@@ -41,23 +34,6 @@ namespace Wishlist.Client.Pages
         private async Task RefreshUserData()
         {
             Users = await client.GetFromJsonAsync<List<ApplicationUserDTO>>($"api/user/All/{activeUserId}");
-            if (Users != null && Users.Count > 0)
-            {
-                userListCounts = new DataItem[Users.Count];
-                int i = 0;
-                foreach (var user in Users)
-                {
-                    if (user == null)
-                    {
-                        userListCounts[i] = new DataItem
-                        { FirstName = "?", ListCount = 0 };
-                    } else {
-                        userListCounts[i] = new DataItem
-                        { FirstName = user.FirstName, ListCount = user.ListCount };
-                    }
-                    i++;
-                }
-            }
             StateHasChanged();
         }
         protected override async Task OnInitializedAsync()
