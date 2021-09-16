@@ -70,15 +70,6 @@ namespace Wishlist.Shared.Extensions
             var mapper = ApplicationUserDtoMapper();
             return mapper.Map<ApplicationUser, ApplicationUserDTO>(person);
         }
-        public static void MapFromUser(this ApplicationUser targetPerson, 
-            ApplicationUser person)
-        {
-            var config = new MapperConfiguration(
-                cfg => cfg.CreateMap<ApplicationUser, ApplicationUser>()
-            );
-            var mapper = new Mapper(config);
-            mapper.Map<ApplicationUser, ApplicationUser>(person, targetPerson);
-        }
         public static List<ApplicationUserDTO> ToDTO(this List<ApplicationUser> people)
 		{
             var mapper = ApplicationUserDtoMapper();

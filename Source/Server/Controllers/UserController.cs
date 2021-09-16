@@ -47,7 +47,8 @@ namespace Wishlist.Server.Controllers
 
             foreach (var person in people)
             {
-                person.MapFromUser(await PopulatePersonData(person));
+                person.ListCount = _context.Gifts.Where(g => g.UserAskingId == person.Id).Count();
+                person.IsAdmin = await _userManager.IsInRoleAsync(person, Roles.Admin);
             }
             return people;
         }

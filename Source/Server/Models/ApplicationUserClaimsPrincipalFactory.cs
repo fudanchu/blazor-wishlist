@@ -38,11 +38,9 @@ namespace Wishlist.Server.Models
                             base.GenerateClaimsAsync(user);
 
             claims.AddClaim(new Claim("GroupId", user.GroupId.ToString()));
-            claims.AddClaim(new Claim("PictureData", user.PictureData ?? ""));
             claims.AddClaim(new Claim("NickName", user.NickName ?? ""));
             claims.AddClaim(new Claim("FirstName", user.FirstName ?? ""));
             claims.AddClaim(new Claim("LastName", user.LastName ?? ""));
-            claims.AddClaim(new Claim("LastListUpdate", user.LastListUpdate.ToString()));
 
             return claims;
         }
