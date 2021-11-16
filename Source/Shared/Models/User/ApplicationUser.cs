@@ -37,6 +37,11 @@ namespace Wishlist.Shared.Models.User
         public int ListCount { get; set; }
         [NotMapped]
         public bool IsAdmin { get; set; }
+        [NotMapped]
+        public string SantaFor { get; set; }
+
+        public string SantaForUserName { get; set; }
+
         //TODO: Use this to group users or remove it if not needed
         public int GroupId { get; set; }
         public string DisplayFullName()
@@ -73,6 +78,12 @@ namespace Wishlist.Shared.Models.User
         public int ListCount { get; set; }
         [NotMapped]
         public bool IsAdmin { get; set; }
+
+        [NotMapped]
+        public string SantaFor { get; set; }
+
+        public string SantaForUserName { get; set; }
+
         //TODO: Use this to group users or remove it if not needed
         public int GroupId { get; set; }
         //HACK: Heroku won't pull a username properly when inherited so trying an override

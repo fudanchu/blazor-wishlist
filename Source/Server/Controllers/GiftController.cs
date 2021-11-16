@@ -28,20 +28,17 @@ namespace Wishlist.Server.Controllers
         public async Task<IActionResult> GetPaged(int pageNumber = 1, int pageSize = 10, string filter = null)
         {
             if (filter != null) { filter = filter.ToLower(); }
-            var targetGifts = string.IsNullOrWhiteSpace(filter) ?
-                    _context.Gifts
-                    .Include(g => g.UserAsking)
-                    .Include(g => g.UserBuying) :
-                    _context.Gifts
-                    .Include(g => g.UserAsking)
-                    .Include(g => g.UserBuying)
-                    .Where(x =>
-                (!string.IsNullOrWhiteSpace(x.Name) && x.Name.ToLower().Contains(filter))
-                || (!string.IsNullOrWhiteSpace(x.Description) && x.Description.ToLower().Contains(filter)));
+            IQueryable<Gift> targetGifts = 
+                    _context.Gifts.Include(g => g.UserAsking).Include(g => g.UserBuying);
 
+            if (!string.IsNullOrWhiteSpace(filter)) {
+                targetGifts = targetGifts.Where(x =>
+                    (!string.IsNullOrWhiteSpace(x.Name) && x.Name.ToLower().Contains(filter))
+                    || (!string.IsNullOrWhiteSpace(x.Description) && x.Description.ToLower().Contains(filter)));
+            }
             var selectGifts = await PaginatedList<Gift>.CreateAsync(
                 targetGifts.OrderBy(g => g.Rank), pageNumber, pageSize);
-            //selectGifts.Items = PopulateGiftData(selectGifts.Items);
+
             var selectGiftsDTO = new PaginatedList<GiftDTO>
             {
                 HasNextPage = selectGifts.HasNextPage,

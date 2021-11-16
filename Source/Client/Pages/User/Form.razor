@@ -2,168 +2,203 @@
 @using System.Linq
 @inject IToastService toastService
 @inject DialogService dialogService
+@inject HttpClient httpClient
 @inject IJSRuntime js
 
 <!-- HACK: Cropper modal is "inside" this div so, make sure we have the height to show the cropping tool -->
 <EditForm Model="@user" OnValidSubmit="@OnValidSubmit" style="min-height: 500px">
-	<DataAnnotationsValidator />
-	<div class="form-group">
-		<label>Group Id :</label>
-		<div>
-			<InputNumber @bind-Value="@user.GroupId" />
-			<ValidationMessage For="@(() => user.GroupId)" />
-		</div>
-	</div>
-	<div class="form-group ">
-		<div>
-			<label>First Name :</label>
-			<div>
-				<InputText @bind-Value="@user.FirstName" />
-				<ValidationMessage For="@(() => user.FirstName)" />
-			</div>
-		</div>
-	</div>
-	<div class="form-group ">
-		<div>
-			<label>Last Name :</label>
-			<div>
-				<InputText @bind-Value="@user.LastName" />
-				<ValidationMessage For="@(() => user.LastName)" />
-			</div>
-		</div>
-	</div>
-	<div class="form-group ">
-		<div>
-			<label>Nick Name :</label>
-			<div>
-				<InputText @bind-Value="@user.NickName" />
-				<ValidationMessage For="@(() => user.NickName)" />
-			</div>
-		</div>
-	</div>
-	<div class="form-group ">
-		<div>
-			<label>Email :</label>
-			<div>
-				<InputText @bind-Value="@user.Email" />
-				<ValidationMessage For="@(() => user.Email)" />
-			</div>
-		</div>
-	</div>
-	<div class="form-group ">
-		<div>
-			<label>New Password ?</label>
-			<div>
-				<InputText @bind-Value="@user.ClearPassword" />
-				<ValidationMessage For="@(() => user.ClearPassword)" />
-			</div>
-		</div>
-	</div>
-	<div class="form-group ">
-		<div>
-			<label>List Note :</label>
-			<div>
-				<InputText @bind-Value="@user.ListNote" />
-				<ValidationMessage For="@(() => user.ListNote)" />
-			</div>
-		</div>
-	</div>
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Group Id :</label>
+        <div>
+            <InputNumber @bind-Value="@user.GroupId" />
+            <ValidationMessage For="@(() => user.GroupId)" />
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>First Name :</label>
+            <div>
+                <InputText @bind-Value="@user.FirstName" />
+                <ValidationMessage For="@(() => user.FirstName)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Last Name :</label>
+            <div>
+                <InputText @bind-Value="@user.LastName" />
+                <ValidationMessage For="@(() => user.LastName)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Nick Name :</label>
+            <div>
+                <InputText @bind-Value="@user.NickName" />
+                <ValidationMessage For="@(() => user.NickName)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Email :</label>
+            <div>
+                <InputText @bind-Value="@user.Email" />
+                <ValidationMessage For="@(() => user.Email)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>New Password ?</label>
+            <div>
+                <InputText @bind-Value="@user.ClearPassword" />
+                <ValidationMessage For="@(() => user.ClearPassword)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>List Note :</label>
+            <div>
+                <InputText @bind-Value="@user.ListNote" />
+                <ValidationMessage For="@(() => user.ListNote)" />
+            </div>
+        </div>
+    </div>
 
-	<div class="form-group">
-		<label>Picture :</label>
-		<InputFile id="UserProfilePhoto" OnChange="OnInputFileChange" class="form-control" style="max-width: 240px" />
-		<ValidationMessage For="() => user.PictureData" />
+    <div class="form-group">
+        <label>Picture :</label>
+        <InputFile id="UserProfilePhoto" OnChange="OnInputFileChange" class="form-control" style="max-width: 240px" />
+        <ValidationMessage For="() => user.PictureData" />
 
-		@if (user.PictureData != null && user.PictureData.Length > 0)
-		{
-			<img style="float: left" class="user-image" src="@user.RenderPicture()">
-		}
-	</div>
+        @if (user.PictureData != null && user.PictureData.Length > 0)
+        {
+            <img style="float: left" class="user-image" src="@user.RenderPicture()">
+        }
+    </div>
 
-	<AuthorizeView Policy="@Policies.CanCreateAdmins">
-		<Authorized Context="Auth">
-			<div class="form-group" style="margin-left: 15px">
-				<label for="isVip">VIP ?</label>
-				<RadzenSwitch id="isVip" @bind-Value="@user.IsAdmin" Style="display: inline-flex" />
-				<div>
-					<label>User Name : @user.UserName</label>
-				</div>
-			</div>
-		</Authorized>
-	</AuthorizeView>
+    @if (!string.IsNullOrEmpty(user.SantaFor))
+    {
+        <div class="form-group" style="margin-left: 15px">
+            <div style="position: relative;width: 250px;height: 78px; background-image: url('images/SantaNameTag250px.jpg')">
+                <div style="position: absolute;left: 10px;top: 10px;font-size: 14pt;">
+                    <label>Santa for:</label><br />
+                    @user.SantaFor
+                </div>
+            </div>
+        </div>
+    }
 
-	<br />
-	<button type="submit" class="btn btn-success" style="margin-bottom: 11px">
-		@ButtonText
-	</button>
+    <AuthorizeView Policy="@Policies.CanCreateAdmins">
+        <Authorized Context="Auth">
+            <div class="form-group" style="margin-left: 15px">
+                <label for="isVip">VIP ?</label>
+                <RadzenSwitch id="isVip" @bind-Value="@user.IsAdmin" Style="display: inline-flex" />
+                <div>
+                    <label>User Name : @user.UserName</label>
+                </div>
+                <div>
+                    <label>Secret Santa For:</label>
+                    <div>
+                        @if (Users != null)
+                        {
+                            <InputSelect @bind-Value="user.SantaForUserName" class="form-control">
+                                <option value="">...</option>
+                                @foreach (var usr in Users)
+                                {
+                                    //no one should be secret santa for themselves...
+                                    if (user.UserName != usr.Value)
+                                    {
+                                        <option value="@usr.Value">@usr.DisplayText</option>
+                                    }
+                                }
+                            </InputSelect>
+                        }
+                    </div>
+                </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>
 
-	<br /><br />
-	<div class="alert alert-info">NOTE: When you log in you'll see yourself in the user selection as first/last initial (like Daniel B), unless you specify a nickname and it's shorter than your first name - then it will be nickname/last (such as Dan B).</div>
+    <br />
+    <button type="submit" class="btn btn-success" style="margin-bottom: 11px">
+        @ButtonText
+    </button>
+
+    <br /><br />
+    <div class="alert alert-info">NOTE: When you log in you'll see yourself in the user selection as first/last initial (like Daniel B), unless you specify a nickname and it's shorter than your first name - then it will be nickname/last (such as Dan B).</div>
 </EditForm>
 
 @code {
-	[Parameter] public ApplicationUser user { get; set; }
-	[Parameter] public string ButtonText { get; set; } = "Save";
-	[Parameter] public EventCallback OnValidSubmit { get; set; }
+    [Parameter] public ApplicationUser user { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    List<ApplicationUserLoginDTO> Users { get; set; }
 
-	IBrowserFile UploadedImage;
+    IBrowserFile UploadedImage;
 
     protected async override Task OnInitializedAsync()
-	{
-		//load the image cropper external component
-		await js.InvokeAsync<string>("app.loadScript", "_content/Chronos.Blazor.Cropper/CropHelper.js");
-	}
-	private async Task OnInputFileChange(InputFileChangeEventArgs e)
-	{
-		var format = e.File.ContentType.ToLower();
-		var isValidImage =
-			format.Equals("image/jpg") ||
-			format.Equals("image/png") ||
-			format.Equals("image/jpeg") ||
-			format.Equals("image/gif");
-		if (!isValidImage)
-		{
-			var errorMessage = $"That file type ({format}) is not one of the allowed image types (jpg, png, gif).";
-			toastService.ShowError(errorMessage, "OOPS!");
-		}
-		else
-		{
-			UploadedImage = e.File;
-			user.PictureType = format;
-			Console.WriteLine("Cropping with image type " + format);
+    {
+        //load the image cropper external component
+        await js.InvokeAsync<string>("app.loadScript", "_content/Chronos.Blazor.Cropper/CropHelper.js");
+        Users = await httpClient.GetFromJsonAsync<List<ApplicationUserLoginDTO>>("api/auth/GetUsers");
+    }
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var format = e.File.ContentType.ToLower();
+        var isValidImage =
+            format.Equals("image/jpg") ||
+            format.Equals("image/png") ||
+            format.Equals("image/jpeg") ||
+            format.Equals("image/gif");
+        if (!isValidImage)
+        {
+            var errorMessage = $"That file type ({format}) is not one of the allowed image types (jpg, png, gif).";
+            toastService.ShowError(errorMessage, "OOPS!");
+        }
+        else
+        {
+            UploadedImage = e.File;
+            user.PictureType = format;
+            Console.WriteLine("Cropping with image type " + format);
 
-			//open dialog
-			var result = await dialogService.OpenAsync<ImageCropper>("Crop Image?", parameters: new Dictionary<string, object>()
-				{
-					{ "UploadedImage", UploadedImage }
-				});
-			if (!string.IsNullOrWhiteSpace(result)) {
-				user.PictureData = result;
-			}
-		}
-	}
+            //open dialog
+            var result = await dialogService.OpenAsync<ImageCropper>("Crop Image?", parameters: new Dictionary<string, object>()
+                {
+                    { "UploadedImage", UploadedImage }
+                });
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                user.PictureData = result;
+            }
+        }
+    }
 
-	private class FileValidationAttribute : ValidationAttribute
-	{
-		public FileValidationAttribute(string[] allowedExtensions)
-		{
-			AllowedExtensions = allowedExtensions;
-		}
+    private class FileValidationAttribute : ValidationAttribute
+    {
+        public FileValidationAttribute(string[] allowedExtensions)
+        {
+            AllowedExtensions = allowedExtensions;
+        }
 
-		private string[] AllowedExtensions { get; }
+        private string[] AllowedExtensions { get; }
 
-		protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-		{
-			var file = (IBrowserFile)value;
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var file = (IBrowserFile)value;
 
-			var extension = System.IO.Path.GetExtension(file.Name);
+            var extension = System.IO.Path.GetExtension(file.Name);
 
-			if (!AllowedExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
-			{
-				return new ValidationResult($"File must have one of the following extensions: {string.Join(", ", AllowedExtensions)}.", new[] { validationContext.MemberName });
-			}
+            if (!AllowedExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
+            {
+                return new ValidationResult($"File must have one of the following extensions: {string.Join(", ", AllowedExtensions)}.", new[] { validationContext.MemberName });
+            }
 
-			return ValidationResult.Success;
-		}
-	}
+            return ValidationResult.Success;
+        }
+    }
 }

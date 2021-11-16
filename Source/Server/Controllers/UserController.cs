@@ -40,6 +40,15 @@ namespace Wishlist.Server.Controllers
         {
             person.ListCount = _context.Gifts.Where(g => g.UserAskingId == person.Id).Count();
             person.IsAdmin = await _userManager.IsInRoleAsync(person, Roles.Admin);
+            if (!string.IsNullOrEmpty(person.SantaForUserName))
+            {
+                person.SantaFor = "UNKNOWN!";
+                var matchedSanta = _context.People.Where(p => p.UserName == person.SantaForUserName).FirstOrDefault();
+                if (matchedSanta != null)
+                {
+                    person.SantaFor = matchedSanta.DisplayFullName();
+                }
+            }
             return person;
         }
         private async Task<List<ApplicationUser>> PopulatePeopleData(List<ApplicationUser> people)
@@ -49,6 +58,15 @@ namespace Wishlist.Server.Controllers
             {
                 person.ListCount = _context.Gifts.Where(g => g.UserAskingId == person.Id).Count();
                 person.IsAdmin = await _userManager.IsInRoleAsync(person, Roles.Admin);
+                if (!string.IsNullOrEmpty(person.SantaForUserName))
+                {
+                    person.SantaFor = "UNKNOWN!";
+                    var matchedSanta = _context.People.Where(p => p.UserName == person.SantaForUserName).FirstOrDefault();
+                    if (matchedSanta != null)
+                    {
+                        person.SantaFor = matchedSanta.DisplayFullName();
+                    }
+                }
             }
             return people;
         }
@@ -162,6 +180,7 @@ namespace Wishlist.Server.Controllers
             existingUser.PictureData = person.PictureData;
             existingUser.PictureType = person.PictureType;
             existingUser.IsAdmin = person.IsAdmin;
+            existingUser.SantaForUserName = person.SantaForUserName;
 
             if (isNewPassword)
             {
