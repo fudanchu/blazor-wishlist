@@ -34,7 +34,7 @@
 
                                 <InputSelect @bind-Value="loginRequest.UserName" class="form-control">
                                     <option value="">...</option>
-                                    @foreach (var usr in Users)
+                                    @foreach (var usr in Users.OrderBy(u=>u.DisplayText))
                                             {
                                         <option value="@usr.Value">@usr.DisplayText</option>
                                             }

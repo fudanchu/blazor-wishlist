@@ -108,7 +108,7 @@
                         {
                             <InputSelect @bind-Value="user.SantaForUserName" class="form-control">
                                 <option value="">...</option>
-                                @foreach (var usr in Users)
+                                @foreach (var usr in Users.OrderBy(u=>u.DisplayText))
                                 {
                                     //no one should be secret santa for themselves...
                                     if (user.UserName != usr.Value)
