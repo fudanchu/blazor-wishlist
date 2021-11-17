@@ -55,10 +55,10 @@
 			<table class="table highlight-on-hover">
 				<thead>
 					<tr>
-						<th>Id/Email</th>
+						<th>Id/Email/Last Update</th>
 						<th>Name</th>
 						<th>Pic</th>
-						<th>Last List Update</th>
+						<th>Santa For?</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -68,7 +68,11 @@
 						<tr>
 							<td>
 								<a href="#" @onclick="@(() => Impersonate(person.Id))">@person.Id</a><br />
-								@person.Email
+								@person.Email<br />
+								@if (!(person.LastListUpdate.Year == 1))
+								{
+									<span title="@person.LastListUpdate">@person.LastListUpdate.ToShortDateString()</span>
+								}
 							</td>
 							<td>
 								<div style="float: left">
@@ -89,9 +93,8 @@
 								<img class="user-image" src="@person.RenderPicture()">
 							</td>
 							<td>
-								@if (!(person.LastListUpdate.Year == 1))
-								{
-									<span title="@person.LastListUpdate">@person.LastListUpdate.ToShortDateString()</span>
+								@if (!string.IsNullOrWhiteSpace(person.SantaForUserName)) {
+									@person.SantaForUserName
 								}
 							</td>
 							<td>
