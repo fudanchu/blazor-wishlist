@@ -103,10 +103,17 @@ namespace Wishlist.Client.Shared
             hubConnection.On<List<string>, string, string>("UpdateActivity",
                 async (users, userWhoActed, userAction) =>
                 {
-                    await OnlineUsersUpdated.InvokeAsync(users.ToDelimitedString());
-                    await AddMessageToChat($"{userWhoActed} is {userAction}!");
+                    string updateMessage = $"{userWhoActed} is {userAction}!";
+                    bool isUpdateNewsworthy = messages == null || messages.Count == 0 
+                        || (!messages.Contains(updateMessage));
 
-                    await PhotoGridComponent.Refresh();
+                    if (isUpdateNewsworthy)
+                    {
+                        await OnlineUsersUpdated.InvokeAsync(users.ToDelimitedString());
+                        await AddMessageToChat(updateMessage);
+
+                        await PhotoGridComponent.Refresh();
+                    }
                 });
 
             var authState = await authStateProvider.GetAuthenticationStateAsync();
