@@ -58,6 +58,18 @@ html {
 }
 /*#endregion*/
 
+/* UI hidden on small screens */
+@media (max-width: 720px) {
+    .extra-ui {
+        display: none;
+    }
+}
+@media (min-width: 721px) {
+    .extra-ui {
+        display: block;
+    }
+}
+
 .max-w70-control {
     max-width: 70px;
 }
@@ -101,21 +113,27 @@ html {
 .rz-tick-text {
     fill: rgba(255, 255, 255, 1);
 }
+
 body:not(.rz-default-scrollbars) ::-webkit-scrollbar-thumb {
     background: blue;
 }
+
 .rz-dialog {
     background-color: black;
 }
+
 .rz-dialog-titlebar {
     background-color: rgb(80 61 115);
 }
+
 .rz-button.btn-primary, .btn-primary.rz-paginator-element {
     background-color: #dc3545;
 }
+
 .rz-button.btn-secondary, .btn-secondary.rz-paginator-element {
     background-color: #6c757d;
 }
+
 .rz-dialog-mask {
     background-color: black;
 }
@@ -167,6 +185,7 @@ body {
     float: right;
     font-size: medium;
 }
+
     .user-online-count-container::before {
         content: "\2605";
         color: springgreen;
@@ -175,6 +194,7 @@ body {
         font-size: xx-large;
         z-index: 5;
     }
+
 .user-online-count {
     position: relative;
     float: right;
@@ -218,9 +238,11 @@ body {
 .active-icon {
     color: chartreuse;
 }
+
 .inactive-icon {
     color: rgb(220, 53, 69);
 }
+
 .chat-box {
     height: 70px;
     overflow-x: hidden;
@@ -230,9 +252,11 @@ body {
     border: 1px solid gray;
     padding-left: 10px;
 }
+
     .chat-box li {
         list-style: none;
     }
+
         .chat-box li::before {
             content: "\00BB";
             padding-right: 5px;
@@ -276,18 +300,21 @@ img.active-user {
     color: inherit
 }
 
-.table.highlight-on-hover {
-    border-collapse: collapse;
-}
-    .table.highlight-on-hover thead tr:hover {
-        background: none;
+    .table.highlight-on-hover {
+        border-collapse: collapse;
     }
-    .table.highlight-on-hover tbody tr:hover:nth-child(odd) {
-        background: #35003c;
-    }
-    .table.highlight-on-hover tbody tr:hover:nth-child(even) {
-        background: #00053c;
-    }
+
+        .table.highlight-on-hover thead tr:hover {
+            background: none;
+        }
+
+        .table.highlight-on-hover tbody tr:hover:nth-child(odd) {
+            background: #35003c;
+        }
+
+        .table.highlight-on-hover tbody tr:hover:nth-child(even) {
+            background: #00053c;
+        }
 
 a, .btn-link {
     color: #86c0ff;
@@ -321,6 +348,7 @@ a {
     bottom: 0px;
     left: 0px;
 }
+
 .app-container {
     min-height: 320px;
     overflow: hidden;
@@ -344,9 +372,11 @@ a {
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
+
     .btn-primary:hover {
         background-color: #0151a7;
     }
+
 .btn-danger:hover {
     background-color: #aa1f2c;
 }

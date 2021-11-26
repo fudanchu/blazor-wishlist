@@ -5,7 +5,10 @@
     <div class="navbar-nav">
         <AuthorizeView Roles="@Roles.Admin">
             <Authorized Context="Auth">
-                <NavLink href="users" class="nav-item nav-link">Manage</NavLink>
+                <NavLink href="users" class="nav-item nav-link">										<span class="fa fa-id-badge" style="
+                                        font-size: xx-large;
+                                        color: yellow;
+                                        margin-right: 5px"></span></NavLink>
             </Authorized>
         </AuthorizeView>
         <NavLink href="" Match="NavLinkMatch.All" class="nav-item nav-link">Home</NavLink>

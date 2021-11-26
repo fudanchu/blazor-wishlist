@@ -3,7 +3,7 @@
 @inject DialogService dialogService
 @inject ICommonService commonService
 
-<EditForm Model="@gift" OnValidSubmit="@ProcessGift">
+<EditForm id="EditGiftForm" Model="@gift" OnValidSubmit="@ProcessGift">
 	<DataAnnotationsValidator />
 	<div class="form-group">
 		<div>
@@ -84,9 +84,9 @@ else
 						@gift.Description
 					</td>
 					<td>
-						<button @onclick="@(() => EnterEditState(gift))" class="btn btn-primary">
+						<a href="#EditGiftForm" @onclick="@(() => EnterEditState(gift))" class="btn btn-primary">
 							<span class="fas fa-fw fa-pencil-alt"></span>
-						</button>
+						</a>
 						<button @onclick="@(() => Delete(gift))" class="btn btn-danger">
 							<span class="fas fa-fw fa-trash-alt"></span>
 						</button>
