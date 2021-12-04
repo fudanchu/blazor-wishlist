@@ -7,12 +7,12 @@
 @inject HttpClient httpClient
 @inject IToastService toastService
 
-<div class="card rounded-corners max-width-limited mx-auto">
+<div class="card rounded-corners max-width-small mx-auto">
     <h1 class="card-header">Wishlist Website</h1>
     <div class="card-body">
 
         <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(1.5)">
-            <EditForm class="form-signin" OnValidSubmit="OnSubmit" Model="loginRequest">
+            <EditForm OnValidSubmit="OnSubmit" Model="loginRequest">
                 <DataAnnotationsValidator />
 
                 @if (!string.IsNullOrEmpty(problem))
@@ -30,37 +30,38 @@
                     {
                         <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(1.5)">
                             <div class="form-group">
+                                <ValidationMessage For="(() => loginRequest.UserName)" />
                                 <label for="inputUsername">You are?</label>
 
                                 <InputSelect @bind-Value="loginRequest.UserName" class="form-control">
                                     <option value="">...</option>
-                                    @foreach (var usr in Users.OrderBy(u=>u.DisplayText))
-                                            {
+                                    @foreach (var usr in Users.OrderBy(u => u.DisplayText))
+                                    {
                                         <option value="@usr.Value">@usr.DisplayText</option>
-                                            }
+                                    }
                                 </InputSelect>
-                                <ValidationMessage For="(() => loginRequest.UserName)" />
                             </div>
 
-                            <div class="form-group">
-                                <label for="inputPassword">Password</label>
-                                <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="loginRequest.Password" />
-                                <ValidationMessage For="@(() => loginRequest.Password)" />
-                            </div>
+                            <CommonInput Placeholder="Password"
+                                 ExtraCSS="max-w150-control"
+                                 InputType="password"
+                                 @bind-Value="loginRequest.Password"
+                                 ValidationFor="@(() => loginRequest.Password)"
+                                 Icon="fa-key"></CommonInput>
+
                         </Animate>
                     }
                 }
 
-                <br>
                 @if (usersExist)
                 {
-                <button disabled="@loading" class="btn btn-primary" type="submit">
-                    @if (loading)
-                    {
-                        <span class="spinner-border spinner-border-sm mr-1"></span>
-                    }
-                    Login
-                </button>
+                    <button disabled="@loading" class="btn btn-primary" type="submit">
+                        @if (loading)
+                        {
+                            <span class="spinner-border spinner-border-sm mr-1"></span>
+                        }
+                        Login
+                    </button>
                 }
                 <NavLink href="register" class="btn btn-link">Register</NavLink>
                 @if (loginRequest != null && !string.IsNullOrEmpty(loginRequest.UserName))

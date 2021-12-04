@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>2021.11.26.1116</Version>
+    <Version>2021.12.04.0938</Version>
   </PropertyGroup>
 
   <ItemGroup>

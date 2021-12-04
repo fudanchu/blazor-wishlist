@@ -8,67 +8,43 @@
 <!-- HACK: Cropper modal is "inside" this div so, make sure we have the height to show the cropping tool -->
 <EditForm Model="@user" OnValidSubmit="@OnValidSubmit" style="min-height: 500px">
     <DataAnnotationsValidator />
-    <div class="form-group">
-        <label>Group Id :</label>
-        <div>
-            <InputNumber @bind-Value="@user.GroupId" />
-            <ValidationMessage For="@(() => user.GroupId)" />
-        </div>
-    </div>
-    <div class="form-group ">
-        <div>
-            <label>First Name :</label>
-            <div>
-                <InputText @bind-Value="@user.FirstName" />
-                <ValidationMessage For="@(() => user.FirstName)" />
-            </div>
-        </div>
-    </div>
-    <div class="form-group ">
-        <div>
-            <label>Last Name :</label>
-            <div>
-                <InputText @bind-Value="@user.LastName" />
-                <ValidationMessage For="@(() => user.LastName)" />
-            </div>
-        </div>
-    </div>
-    <div class="form-group ">
-        <div>
-            <label>Nick Name :</label>
-            <div>
-                <InputText @bind-Value="@user.NickName" />
-                <ValidationMessage For="@(() => user.NickName)" />
-            </div>
-        </div>
-    </div>
-    <div class="form-group ">
-        <div>
-            <label>Email :</label>
-            <div>
-                <InputText @bind-Value="@user.Email" />
-                <ValidationMessage For="@(() => user.Email)" />
-            </div>
-        </div>
-    </div>
-    <div class="form-group ">
-        <div>
-            <label>New Password ?</label>
-            <div>
-                <InputText @bind-Value="@user.ClearPassword" />
-                <ValidationMessage For="@(() => user.ClearPassword)" />
-            </div>
-        </div>
-    </div>
-    <div class="form-group ">
-        <div>
-            <label>List Note :</label>
-            <div>
-                <InputText @bind-Value="@user.ListNote" />
-                <ValidationMessage For="@(() => user.ListNote)" />
-            </div>
-        </div>
-    </div>
+
+    <CommonInput Placeholder="First Name like Daniel"
+                 Label="First Name:"
+                 ExtraCSS="max-w100-control"
+                 @bind-Value="user.FirstName"
+                 ValidationFor="@(() => user.FirstName)"
+                 Icon="fa-user"></CommonInput>
+
+    <CommonInput Placeholder="Last Name like Smith"
+                 Label="Last Name:"
+                 @bind-Value="user.LastName"
+                 ValidationFor="@(() => user.LastName)"
+                 Icon="fa-user"></CommonInput>
+
+    <CommonInput Placeholder="(optional) Nick Name?"
+                 Label="Nick Name?"
+                 ExtraCSS="max-w100-control"
+                 @bind-Value="user.NickName"
+                 ValidationFor="@(() => user.NickName)"
+                 Icon="fa-user-tag optional"></CommonInput>
+
+    <CommonInput Placeholder="Email like dan@mail.com"
+                 Label="Email:"
+                 @bind-Value="user.Email"
+                 ValidationFor="@(() => user.Email)"
+                 Icon="fa-envelope"></CommonInput>
+
+    <CommonInput InputType="password"
+                 Label="New Password?"
+                 @bind-Value="user.ClearPassword"
+                 ValidationFor="@(() => user.ClearPassword)"
+                 Icon="fa-key optional"></CommonInput>
+
+    <CommonInput Label="List Note?"
+                 @bind-Value="user.ListNote"
+                 ValidationFor="@(() => user.ListNote)"
+                 Icon="fa-address-card optional"></CommonInput>
 
     <div class="form-group">
         <label>Picture :</label>
@@ -108,15 +84,15 @@
                         {
                             <InputSelect @bind-Value="user.SantaForUserName" class="form-control">
                                 <option value="">...</option>
-                                @foreach (var usr in Users.OrderBy(u=>u.DisplayText))
+                                @foreach (var usr in Users.OrderBy(u => u.DisplayText))
                                 {
-                                    //no one should be secret santa for themselves...
-                                    if (user.UserName != usr.Value)
+                                //no one should be secret santa for themselves...
+                                if (user.UserName != usr.Value)
                                     {
-                                        <option value="@usr.Value">@usr.DisplayText</option>
+                                    <option value="@usr.Value">@usr.DisplayText</option>
                                     }
                                 }
-                            </InputSelect>
+                        </InputSelect>
                         }
                     </div>
                 </div>

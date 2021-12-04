@@ -5,12 +5,12 @@
 <EditForm Model="@viewList">
     @if (loadFailed)
     {
-        <div class="grid-container">
-            <div class="grid-item"><img src="/images/AngryGift.png" /></div>
-            <div class="grid-item">
-                <span class="alert-danger">Loading failed!  :(</span>
-                <p class="alert-danger">This list may not exist!</p>
-            </div>
+        <div class="flex-row">
+            <div><img src="/images/AngryGift.png" /></div>
+            <h1>
+                Loading failed!  :(
+                <p>This list may not exist!</p>
+            </h1>
         </div>
     }
     else if (isLoading)

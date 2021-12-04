@@ -4,65 +4,68 @@
 @implements IAsyncDisposable
 
 <section class="chat-ui">
-	<span class="oi oi-cog mr-2" onclick="app.toggleSettingsModal()" title="Modify voice settings"></span>
-	<span class="oi oi-volume-high mr-2 @(isReadAloudMode ? "active-icon" : "inactive-icon")" @onclick="@ReadMessageAloud" title="Toggles read-aloud mode"></span>
-	<span class="oi oi-chat mr-2 @(IsConnected ? "active-icon" : "inactive-icon")" @onclick="@OnInitializedAsync" title="@(IsConnected ? "Connected to chat" : "Chat offline, click to reconnect")"></span>
-	Group Chat:
-	<input @bind-value="messageInput" @bind-value:event="oninput" @onkeydown="@OnEnterSubmit" size="50" />
-	<button class="btn btn-primary" @onclick="SendMessage" disabled="@(!IsConnected)">Send</button>
-	
-	<ul class="chat-box">
-		@foreach (var message in messages)
-		{
-			<li>@message</li>
-		}
-	</ul>
+    <span class="oi oi-cog mr-2" onclick="app.toggleSettingsModal()" title="Modify voice settings"></span>
+    <span class="oi oi-volume-high mr-2 @(isReadAloudMode ? "active-icon" : "inactive-icon")" @onclick="@ReadMessageAloud" title="Toggles read-aloud mode"></span>
+    <span class="oi oi-chat mr-2 @(IsConnected ? "active-icon" : "inactive-icon")" @onclick="@OnInitializedAsync" title="@(IsConnected ? "Connected to chat" : "Chat offline, click to reconnect")"></span>
+    Group Chat:
+    <div class="form-group">
+        <input class="form-control" @bind-value="messageInput" @bind-value:event="oninput" @onkeydown="@OnEnterSubmit" size="50" />
+    </div>
+    <div class="form-group top">
+        <button class="btn btn-primary" @onclick="SendMessage" disabled="@(!IsConnected)">Send</button>
+    </div>
+    <ul class="chat-box">
+        @foreach (var message in messages)
+        {
+            <li>@message</li>
+        }
+    </ul>
 </section>
 
 <div class="modal" id="chatSettingsModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Settings</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="app.toggleSettingsModal()">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<form>
-					<div class="form-group">
-						<label for="range">Voice speed: @_voiceSpeed</label>
-						<input type="range" min="@_voiceSpeeds.Min()" max="@_voiceSpeeds.Max()"
-							   step=".25" class="form-control-range" id="range" list="speeds"
-							   value="@_voiceSpeed"
-							   @onchange="(args => _voiceSpeed = double.TryParse(args.Value.ToString(), out var speed) ? speed : 1)">
-						<datalist id="speeds">
-							@foreach (var speed in _voiceSpeeds)
-							{
-								<option value="@speed">speed</option>
-							}
-						</datalist>
-					</div>
-					<div class="form-group">
-						<label for="voices">Speaking voice:</label>
-						<select class="form-control" id="voices" @bind="@_voice">
-							<option selected>Auto</option>
-							@if (_voices is { Count: > 0 })
-							{
-								@foreach (var voice in _voices)
-								{
-									<option selected="@voice.Default" value="@voice.Name">
-										@voice.Name
-									</option>
-								}
-							}
-						</select>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" onclick="app.toggleSettingsModal()" class="btn btn-primary" data-dismiss="modal">Ok</button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Settings</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="app.toggleSettingsModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="range">Voice speed: @_voiceSpeed</label>
+                        <input type="range" min="@_voiceSpeeds.Min()" max="@_voiceSpeeds.Max()"
+                               step=".25" class="form-control-range" id="range" list="speeds"
+                               value="@_voiceSpeed"
+                               @onchange="(args => _voiceSpeed = double.TryParse(args.Value.ToString(), out var speed) ? speed : 1)">
+                        <datalist id="speeds">
+                            @foreach (var speed in _voiceSpeeds)
+                            {
+                                <option value="@speed">speed</option>
+                            }
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="voices">Speaking voice:</label>
+                        <select class="form-control" id="voices" @bind="@_voice">
+                            <option selected>Auto</option>
+                            @if (_voices is { Count: > 0 })
+                            {
+                                @foreach (var voice in _voices)
+                                {
+                                    <option selected="@voice.Default" value="@voice.Name">
+                                        @voice.Name
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="app.toggleSettingsModal()" class="btn btn-primary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
 </div>

@@ -4,45 +4,63 @@
 @inject CustomStateProvider authStateProvider
 @inject IToastService toastService
 
-<h1 class="h2 font-weight-normal login-title">
-    Register
-    <a href="login" style="float: right; margin-top: 19px; font-size: 1rem; line-height: 1.2">Already have an account? Click here to login</a>
-</h1>
-<EditForm class="form-signin text-center" OnValidSubmit="OnSubmit" Model="registerRequest">
-    <DataAnnotationsValidator />
+<div class="card rounded-corners max-width-medium mx-auto">
+    <h1 class="card-header">Register        
+        <a href="login" class="btn btn-danger float-right" title="Cancel Registration">X</a>
+    </h1>
+    <div class="card-body">
 
-    <label for="inputAuthCode" class="sr-only">Authorization Code</label>
-    <InputText id="inputAuthCode" class="form-control" placeholder="Authorization Code?" autofocus @bind-Value="@registerRequest.AuthorizationCode" />
-    <ValidationMessage For="@(() => registerRequest.AuthorizationCode)" />
+        <EditForm OnValidSubmit="OnSubmit" Model="registerRequest">
+            <DataAnnotationsValidator />
 
-    <label for="inputEmail" class="sr-only">Email</label>
-    <InputText id="inputEmail" class="form-control" placeholder="Email like dan@email.com" autofocus @bind-Value="@registerRequest.Email" />
-    <ValidationMessage For="@(() => registerRequest.Email)" />
+            <div>
+            <CommonInput Placeholder="Authorization Code?"
+                         @bind-Value="registerRequest.AuthorizationCode"
+                         ValidationFor="@(() => registerRequest.AuthorizationCode)"
+                         Icon="fa-lock secondary"
+                         IsAutoFocused="true"></CommonInput>
+            </div>
 
-    <label for="inputFirstName" class="sr-only">First Name</label>
-    <InputText id="inputFirstName" class="form-control" placeholder="First Name like Daniel" autofocus @bind-Value="@registerRequest.FirstName" />
-    <ValidationMessage For="@(() => registerRequest.FirstName)" />
+            <CommonInput Placeholder="First Name like Daniel"
+                         @bind-Value="registerRequest.FirstName"
+                         ValidationFor="@(() => registerRequest.FirstName)"
+                         Icon="fa-user"></CommonInput>
 
-    <label for="inputLastName" class="sr-only">Last Name</label>
-    <InputText id="inputLastName" class="form-control" placeholder="Last Name like Smith" autofocus @bind-Value="@registerRequest.LastName" />
-    <ValidationMessage For="@(() => registerRequest.LastName)" />
+            <CommonInput Placeholder="Last Name like Smith"
+                         @bind-Value="registerRequest.LastName"
+                         ValidationFor="@(() => registerRequest.LastName)"
+                         Icon="fa-user"></CommonInput>
 
-    <label for="inputNickName" class="sr-only">Nick Name</label>
-    <InputText id="inputNickName" class="form-control" placeholder="(optional) Nick Name like Dan" autofocus @bind-Value="@registerRequest.NickName" />
-    <ValidationMessage For="@(() => registerRequest.NickName)" />
+            <CommonInput Placeholder="(optional) Nick Name?"
+                         @bind-Value="registerRequest.NickName"
+                         ValidationFor="@(() => registerRequest.NickName)"
+                         Icon="fa-user-tag optional"></CommonInput>
 
-    <label for="inputPassword" class="sr-only">Password</label>
-    <InputText type="password" id="inputPassword" class="form-control" placeholder="Password" @bind-Value="@registerRequest.Password" />
-    <ValidationMessage For="@(() => registerRequest.Password)" />
+            <CommonInput Placeholder="Email like dan@mail.com"
+                         @bind-Value="registerRequest.Email"
+                         ValidationFor="@(() => registerRequest.Email)"
+                         Icon="fa-envelope"></CommonInput>
 
-    <label for="inputPasswordConfirm" class="sr-only">Password Confirmation</label>
-    <InputText type="password" id="inputPasswordConfirm" class="form-control" placeholder="Password Confirmation" @bind-Value="@registerRequest.PasswordConfirm" />
-    <ValidationMessage For="@(() => registerRequest.PasswordConfirm)" />
+            <CommonInput Placeholder="Password"
+                         InputType="password"
+                         @bind-Value="registerRequest.Password"
+                         ValidationFor="@(() => registerRequest.Password)"
+                         Icon="fa-key"></CommonInput>
 
-    <button class="btn btn-lg btn-primary m-3" type="submit">Create User</button>
-</EditForm>
+            <CommonInput Placeholder="Password Confirmation"
+                         InputType="password"
+                         @bind-Value="registerRequest.PasswordConfirm"
+                         ValidationFor="@(() => registerRequest.PasswordConfirm)"
+                         Icon="fa-key"></CommonInput>
 
-@functions{
+            <div class="text-center">
+                <button class="btn btn-lg btn-primary m-3" type="submit">Create User</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@functions {
     RegisterRequest registerRequest { get; set; } = new RegisterRequest();
 
     async Task OnSubmit()

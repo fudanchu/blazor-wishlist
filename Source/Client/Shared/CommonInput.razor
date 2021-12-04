@@ -1,0 +1,29 @@
+﻿@typeparam T
+@namespace Wishlist.Client.Shared
+@inherits InputBase<T>
+
+<div class="form-group ">
+    <ValidationMessage For="@ValidationFor" />
+    @if (!string.IsNullOrWhiteSpace(Label) && !IsLabelInline)
+    {
+        <label class="form-control-label" for="@Id">@Label</label>
+    }
+    <div class="input-container">
+        @if (!string.IsNullOrWhiteSpace(Label) && IsLabelInline)
+        {
+            <label class="form-control-label" for="@Id">@Label</label>
+        }
+        @if (string.IsNullOrWhiteSpace(Label))
+        {
+            <label class="form-control-label sr-only" for="@Id">@Placeholder</label>
+        }
+        @if (!string.IsNullOrWhiteSpace(Icon))
+        {
+            <i class="fa @Icon @((CssClass.Contains("invalid")) ? "icon-error" : "") icon"
+           title="@((CssClass.Contains("invalid")) ? "Problem - please fix!" : "")"></i>
+        }
+        <input id="@Id" class="@CssClass @ExtraCSS" title="@Placeholder"
+               type="@GetInputType()" step="@GetStep()" placeholder="@Placeholder"
+               autofocus="@IsAutoFocused" @bind="@CurrentValue" />
+    </div>
+</div>

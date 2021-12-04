@@ -1,20 +1,18 @@
 ﻿@inherits LayoutComponentBase
 
-    <BlazoredToasts 
-                    InfoIcon="fa fa-info-circle"
-                    WarningIcon="fa fa-exclamation-triangle"
-                    SuccessIcon="fa fa-thumbs-up" 
-                    ErrorIcon="fa fa-frown" 
-                    IconType="IconType.FontAwesome" />
+<BlazoredToasts InfoIcon="fa fa-info-circle"
+                WarningIcon="fa fa-exclamation-triangle"
+                SuccessIcon="fa fa-thumbs-up"
+                ErrorIcon="fa fa-frown"
+                IconType="IconType.FontAwesome" />
 
-    <NavMenu></NavMenu>
+<NavMenu></NavMenu>
 
-    <div class="app-container">
-        <div class="container">
-            @Body
-        </div>
-    </div>
+<div class="container">
+    @Body
+</div>
 
-    <RadzenDialog/><RadzenTooltip/>
+<RadzenDialog />
+<RadzenTooltip />
 
-    <SiteFooter></SiteFooter>
+<SiteFooter></SiteFooter>

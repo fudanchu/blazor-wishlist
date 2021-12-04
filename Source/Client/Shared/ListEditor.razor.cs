@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components.Forms;
 using Radzen;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Wishlist.Shared.Models;
@@ -37,17 +34,18 @@ namespace Wishlist.Client.Shared
             gift.Name = targetGift.Name;
             gift.Description = targetGift.Description;
             gift.WebLink = targetGift.WebLink;
+            gift.Cost = targetGift.Cost;
         }
         private void EnterAddState()
         {
             buttonText = "Add";
             buttonClass = "btn-success";
 
-            gift.WebLink = "";
+            gift.Id = 0;
             gift.Name = "";
             gift.Description = "";
+            gift.WebLink = "";
             gift.Cost = null;
-            gift.Id = 0;
         }
 
         private void RefreshParent()
@@ -60,7 +58,7 @@ namespace Wishlist.Client.Shared
         {
             var isConfirmed = await dialogService.Confirm("", 
                 $"Delete {targetGift.Name}?", 
-                new ConfirmOptions() { OkButtonText = "DELETE", CancelButtonText = "Nevermind" });
+                new ConfirmOptions() { OkButtonText = "DELETE", CancelButtonText = "Nevermind", AutoFocusFirstElement = true });
             if (isConfirmed.HasValue && isConfirmed.Value == true)
             {
                 await httpClient.DeleteAsync($"api/gift/{targetGift.Id}");
