@@ -420,7 +420,7 @@ a, .btn-link {
         flex-direction: column;
         align-content: center;
         flex-wrap: wrap;
-        padding: 4rem;
+        padding: 5%;
     }
 
     .btn-primary {
