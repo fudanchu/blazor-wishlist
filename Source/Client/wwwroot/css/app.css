@@ -332,9 +332,11 @@ a, .btn-link {
 /*#endregion*/
 
 /*#region Card */
-.card {
-    min-height: 230px;
-    min-width: 400px;
+@media (min-width: 640px) {
+    .card {
+        min-height: 230px;
+        min-width: 400px;
+    }
 }
 
 .card-body {
@@ -342,131 +344,136 @@ a, .btn-link {
     vertical-align: bottom;
 }
 
-.card-header {
-    font-family: 'alex_brushregular', Arial, sans-serif;
-    padding-bottom: 0;
-    background-color: #0062cc; /* For browsers that do not support gradients */
-    background-image: linear-gradient(to bottom, #609ad8, #0062cc) !important;
-}
-
-    .card-header .btn {
-        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+@media (max-width: 400px) {
+    .card-header {
+        font-size: 30px;
     }
-/*#endregion*/
-
-a {
-    cursor: pointer;
 }
-
-.input-container {
-    display: flex;
-}
-
-    .input-container input {
-        padding: .375rem .75rem;
+    .card-header {
+        font-family: 'alex_brushregular', Arial, sans-serif;
+        padding-bottom: 0;
+        background-color: #0062cc; /* For browsers that do not support gradients */
+        background-image: linear-gradient(to bottom, #609ad8, #0062cc) !important;
     }
 
-.icon {
-    white-space: nowrap;
-    background: dodgerblue;
-    padding: 10px;
-    color: white;
-    min-width: 45px;
-    text-align: center;
-    vertical-align: bottom;
-    font-size: large;
-}
+        .card-header .btn {
+            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+        }
+    /*#endregion*/
 
-    .icon.primary {
-        background: black;
-    }
-
-    .icon.secondary {
-        background: purple;
-    }
-
-    .icon.optional {
-        background: gray;
-    }
-
-.icon-error {
-    background: red !important;
-}
-
-.full-screen {
-    background: black;
-    color: white;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-}
-
-.flex-row {
-    display: flex;
-    flex-direction: row;
-}
-
-.flex-container {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    flex-wrap: wrap;
-    padding: 4rem;
-}
-
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
-    .btn-primary:hover {
-        background-color: #0151a7;
-    }
-
-.btn-danger:hover {
-    background-color: #aa1f2c;
-}
-
-.main {
-    flex: 1;
-}
-
-.navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
-}
-
-.invalid {
-    outline: 1px solid red;
-}
-
-.validation-message {
-    color: #ff9e9e;
-    text-align: left;
-}
-
-#blazor-error-ui {
-    background: black;
-    color: white;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    display: none;
-    left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-}
-
-    #blazor-error-ui .dismiss {
+    a {
         cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
     }
+
+    .input-container {
+        display: flex;
+    }
+
+        .input-container input {
+            padding: .375rem .75rem;
+        }
+
+    .icon {
+        white-space: nowrap;
+        background: dodgerblue;
+        padding: 10px;
+        color: white;
+        min-width: 45px;
+        text-align: center;
+        vertical-align: bottom;
+        font-size: large;
+    }
+
+        .icon.primary {
+            background: black;
+        }
+
+        .icon.secondary {
+            background: purple;
+        }
+
+        .icon.optional {
+            background: gray;
+        }
+
+    .icon-error {
+        background: red !important;
+    }
+
+    .full-screen {
+        background: black;
+        color: white;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+    }
+
+    .flex-row {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .flex-container {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        flex-wrap: wrap;
+        padding: 4rem;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #1b6ec2;
+        border-color: #1861ac;
+    }
+
+        .btn-primary:hover {
+            background-color: #0151a7;
+        }
+
+    .btn-danger:hover {
+        background-color: #aa1f2c;
+    }
+
+    .main {
+        flex: 1;
+    }
+
+    .navbar-toggler {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .valid.modified:not([type=checkbox]) {
+        outline: 1px solid #26b050;
+    }
+
+    .invalid {
+        outline: 1px solid red;
+    }
+
+    .validation-message {
+        color: #ff9e9e;
+        text-align: left;
+    }
+
+    #blazor-error-ui {
+        background: black;
+        color: white;
+        bottom: 0;
+        box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+        display: none;
+        left: 0;
+        padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
+    }
+
+        #blazor-error-ui .dismiss {
+            cursor: pointer;
+            position: absolute;
+            right: 0.75rem;
+            top: 0.5rem;
+        }
