@@ -19,6 +19,7 @@ namespace Wishlist.Client.Shared
         Gift[] gifts { get; set; }
         private string buttonText = "Add";
         private string buttonClass = "btn-success";
+        bool isWaitingOnDialogResponse = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -56,14 +57,27 @@ namespace Wishlist.Client.Shared
 
         async Task Delete(Gift targetGift)
         {
-            var isConfirmed = await dialogService.Confirm("", 
-                $"Delete {targetGift.Name}?", 
-                new ConfirmOptions() { OkButtonText = "DELETE", CancelButtonText = "Nevermind", AutoFocusFirstElement = true });
-            if (isConfirmed.HasValue && isConfirmed.Value == true)
+            if (!isWaitingOnDialogResponse)
             {
-                await httpClient.DeleteAsync($"api/gift/{targetGift.Id}");
-                await OnInitializedAsync();
-                RefreshParent();
+                isWaitingOnDialogResponse = true;
+                var isConfirmed = await dialogService.Confirm("",
+                    $"Delete {targetGift.Name}?",
+                    new ConfirmOptions()
+                    {
+                        OkButtonText = "DELETE",
+                        CancelButtonText = "Nevermind",
+                        AutoFocusFirstElement = true
+                    });
+                if (isConfirmed.HasValue)
+                {
+                    isWaitingOnDialogResponse = false;
+                    if (isConfirmed.Value == true)
+                    {
+                        await httpClient.DeleteAsync($"api/gift/{targetGift.Id}");
+                        await OnInitializedAsync();
+                        RefreshParent();
+                    }
+                }
             }
         }
 

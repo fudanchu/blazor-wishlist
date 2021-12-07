@@ -22,7 +22,7 @@ namespace Wishlist.Client.Shared
         List<GiftDTO> viewList { get; set; } = new List<GiftDTO>();
 
         ApplicationUserDTO activePerson { get; set; }
-        bool loadFailed, isLoading, isViewingOwnList;
+        bool loadFailed, isLoading, isViewingOwnList, isWaitingOnDialogResponse = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -44,36 +44,52 @@ namespace Wishlist.Client.Shared
 
         async Task CheckOff(GiftDTO gift, string personId)
         {
-            var isConfirmed = await dialogService.Confirm("So you bought this?",
-                options: new ConfirmOptions() { OkButtonText = "YES", CancelButtonText = "Nevermind" });
-            if (isConfirmed.HasValue && isConfirmed.Value == true)
+            if (!isWaitingOnDialogResponse)
             {
-                gift.UserBuyingId = personId;
-                try
+                isWaitingOnDialogResponse = true;
+                var isConfirmed = await dialogService.Confirm("So you bought this?",
+                    options: new ConfirmOptions() { OkButtonText = "YES", CancelButtonText = "Nevermind" });
+                if (isConfirmed.HasValue)
                 {
-                    await httpClient.PutAsJsonAsync($"api/gift/checkoff", gift);
-                }
-                catch
-                {
-                    toastService.ShowError("Error on item check-off!", "UH OH");
+                    isWaitingOnDialogResponse = false;
+                    if (isConfirmed.Value == true)
+                    {
+                        gift.UserBuyingId = personId;
+                        try
+                        {
+                            await httpClient.PutAsJsonAsync($"api/gift/checkoff", gift);
+                        }
+                        catch
+                        {
+                            toastService.ShowError("Error on item check-off!", "UH OH");
+                        }
+                    }
                 }
             }
         }
 
         async Task ReverseCheckOff(GiftDTO gift)
         {
-            var isConfirmed = await dialogService.Confirm("You did NOT buy this?",
-                options: new ConfirmOptions() { OkButtonText = "YES", CancelButtonText = "Nevermind" });
-            if (isConfirmed.HasValue && isConfirmed.Value == true) 
+            if (!isWaitingOnDialogResponse)
             {
-                try
+                isWaitingOnDialogResponse = true;
+                var isConfirmed = await dialogService.Confirm("You did NOT buy this?",
+                    options: new ConfirmOptions() { OkButtonText = "YES", CancelButtonText = "Nevermind" });
+                if (isConfirmed.HasValue)
                 {
-                    await httpClient.PutAsJsonAsync($"api/gift/reversecheckoff", gift);
-                    gift.UserBuyingId = "";
-                }
-                catch
-                {
-                    toastService.ShowError("Error on item check-off!", "UH OH");
+                    isWaitingOnDialogResponse = false;
+                    if (isConfirmed.Value == true)
+                    {
+                        try
+                        {
+                            await httpClient.PutAsJsonAsync($"api/gift/reversecheckoff", gift);
+                            gift.UserBuyingId = "";
+                        }
+                        catch
+                        {
+                            toastService.ShowError("Error on item check-off!", "UH OH");
+                        }
+                    }
                 }
             }
         }
@@ -84,7 +100,7 @@ namespace Wishlist.Client.Shared
             try
             {
                 activePerson = Users.Where(p => p.Id == CurrentListUserId).Single();
-            } 
+            }
             catch
             {
                 throw new Exception("Unable to find this user! Maybe clear your browser cache and log in again?");

@@ -21,11 +21,13 @@ namespace Wishlist.Client.Pages.Authentication
         ResetPassword resetPassword { get; set; } = new();
         List<ApplicationUserLoginDTO> Users { get; set; }
 
+        bool isWaitingOnDialogResponse = false;
+
         protected override async Task OnInitializedAsync()
         {
             if (!string.IsNullOrWhiteSpace(isExpired))
             {
-                toastService.ShowWarning("Your session timed out!","SORRY...");
+                toastService.ShowWarning("Your session timed out!", "SORRY...");
             }
             loading = true;
             try
@@ -44,20 +46,28 @@ namespace Wishlist.Client.Pages.Authentication
         }
         private async Task SendPasswordLink()
         {
-            var isConfirmed = await dialogService.Confirm("You want a password reset message sent to your email on file?",
-                $"Send password reset?",
-                new ConfirmOptions() { OkButtonText = "SEND", CancelButtonText = "Nevermind" });
-            if (isConfirmed.HasValue && isConfirmed.Value == true)
+            if (!isWaitingOnDialogResponse)
             {
-                resetPassword.UserName = loginRequest.UserName;
-                var response = await httpClient.PostAsJsonAsync("api/auth/sendpasswordlinkreset", resetPassword);
-                if (response.IsSuccessStatusCode)
+                isWaitingOnDialogResponse = true;
+                var isConfirmed = await dialogService.Confirm("You want a password reset message sent to your email on file?",
+                    $"Send password reset?",
+                    new ConfirmOptions() { OkButtonText = "SEND", CancelButtonText = "Nevermind" });
+                if (isConfirmed.HasValue)
                 {
-                    toastService.ShowSuccess("Maybe in your spam folder.", "Message sent to your email!");
-                }
-                else
-                {
-                    toastService.ShowError(await response.Content.ReadAsStringAsync(), "Failed to send reminder!");
+                    isWaitingOnDialogResponse = false;
+                    if (isConfirmed.Value == true)
+                    {
+                        resetPassword.UserName = loginRequest.UserName;
+                        var response = await httpClient.PostAsJsonAsync("api/auth/sendpasswordlinkreset", resetPassword);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            toastService.ShowSuccess("Maybe in your spam folder.", "Message sent to your email!");
+                        }
+                        else
+                        {
+                            toastService.ShowError(await response.Content.ReadAsStringAsync(), "Failed to send reminder!");
+                        }
+                    }
                 }
             }
         }

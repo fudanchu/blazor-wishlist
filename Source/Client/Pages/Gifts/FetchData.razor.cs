@@ -16,6 +16,7 @@ namespace Wishlist.Client.Pages.Gifts
 		PaginatedList<GiftDTO> gifts { get; set; } = new();
 		int pageSize { get; set; } = 5;
 		string filterText = "";
+		bool isWaitingOnDialogResponse = false;
 
 		private readonly List<int> pageSizes = new List<int> { 5, 10, 25, 50, 100, 1000 };
 
@@ -56,13 +57,21 @@ namespace Wishlist.Client.Pages.Gifts
 
 		async Task Delete(IGift targetGift)
 		{
-			var isConfirmed = await dialogService.Confirm("",
-				$"Delete {targetGift.Name}?",
-				new ConfirmOptions() { OkButtonText = "DELETE", CancelButtonText = "Nevermind" });
-			if (isConfirmed.HasValue && isConfirmed.Value == true)
+			if (!isWaitingOnDialogResponse)
 			{
-				await httpClient.DeleteAsync($"api/gift/{targetGift.Id}");
-				await OnInitializedAsync();
+				isWaitingOnDialogResponse = true;
+				var isConfirmed = await dialogService.Confirm("",
+					$"Delete {targetGift.Name}?",
+					new ConfirmOptions() { OkButtonText = "DELETE", CancelButtonText = "Nevermind" });
+				if (isConfirmed.HasValue)
+				{
+					isWaitingOnDialogResponse = false;
+					if (isConfirmed.Value == true)
+					{
+						await httpClient.DeleteAsync($"api/gift/{targetGift.Id}");
+						await OnInitializedAsync();
+					}
+				}
 			}
 		}
 	}
