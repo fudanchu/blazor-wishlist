@@ -295,7 +295,10 @@ img.active-user {
 }
 
 .alert-secondary {
-    background-color: #f7f96d;
+    display: inline-block;
+    color: white;
+    background-color: transparent;
+    border: dotted 3px white;
 }
 
 .table {

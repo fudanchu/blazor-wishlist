@@ -6,13 +6,22 @@
                 ErrorIcon="fa fa-frown"
                 IconType="IconType.FontAwesome" />
 
-<NavMenu></NavMenu>
+<AuthorizeView>
+    <Authorized>
+        <NavMenu></NavMenu>
 
-<div class="container">
-    @Body
-</div>
+        <div class="container">
+            @Body
+        </div>
+
+        <SiteFooter></SiteFooter>
+    </Authorized>
+    <NotAuthorized>
+        <div class="flex-container">
+            @Body
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
 
 <RadzenDialog />
 <RadzenTooltip />
-
-<SiteFooter></SiteFooter>

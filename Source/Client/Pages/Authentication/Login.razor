@@ -1,6 +1,6 @@
 ﻿@page "/login"
 @page "/login/{isExpired}"
-@layout AuthLayout
+@layout MainLayout
 @inject NavigationManager navigationManager
 @inject CustomStateProvider authStateProvider
 @inject DialogService dialogService
@@ -28,7 +28,8 @@
                     }
                     else
                     {
-                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(1.5)">
+                        <Animate Animation="Animations.FlipUp" Duration="TimeSpan.FromSeconds(1.5)" >
+
                             <div class="form-group">
                                 <ValidationMessage For="(() => loginRequest.UserName)" />
                                 <label for="inputUsername">You are?</label>
@@ -55,11 +56,11 @@
 
                 @if (usersExist)
                 {
+                    @if (loading)
+                    {
+                        <div class="alert alert-secondary"><span class="spinner-border spinner-border-sm mr-1"></span> Getting known users...</div><br />
+                    }
                     <button disabled="@loading" class="btn btn-primary" type="submit">
-                        @if (loading)
-                        {
-                            <span class="spinner-border spinner-border-sm mr-1"></span>
-                        }
                         Login
                     </button>
                 }
