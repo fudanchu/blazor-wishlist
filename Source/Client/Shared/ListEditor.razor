@@ -2,6 +2,7 @@
 @inject NavigationManager navigationManager
 @inject DialogService dialogService
 @inject ICommonService commonService
+@inject AuthenticationStateProvider authStateProvider
 
 <EditForm id="EditGiftForm" Model="@gift" OnValidSubmit="@ProcessGift">
     <DataAnnotationsValidator />

@@ -5,49 +5,51 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <AuthorizeView>
-	<Authorized>
-		<h3 class="extra-ui">
-			Hello @context.User.DisplayFullName() !!
-			@{
-				if (UserIds.Count > 1)
-				{
-					<span class="user-online-count-container">
-						<div class="user-online-count">Users online: @UserIds.Count</div>
-					</span>
-				}
-			}
-		</h3>
-		@{
-			var loggedInUserId = context.User.GetUserId();
-			if (string.IsNullOrEmpty(activeUserId))
-			{
-				activeUserId = loggedInUserId;
-			}
-			if (Users == null)
-			{
-				<text>Loading users and their lists...</text>
-			}
-			else
-			{
-				<Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.5)">
+    <Authorized>
+        <h3 class="extra-ui">
+            Hello @context.User.DisplayFullName() !!
+            @{
+                if (UserIds.Count > 1)
+                {
+                    <span class="user-online-count-container">
+                        <div class="user-online-count">Users online: @UserIds.Count</div>
+                    </span>
+                }
+            }
+        </h3>
+        @{
+            var loggedInUserId = context.User.GetUserId();
+            if (string.IsNullOrEmpty(ActiveUserId))
+            {
+                ActiveUserId = loggedInUserId;
+            }
+            if (Users == null)
+            {
+                <text>Loading users and their lists...</text>
+            }
+            else
+            {
+                <Animate Animation="Animations.FadeUp" Duration="TimeSpan.FromSeconds(0.5)">
 
-				<PhotoGrid Title="All users with their gift counts:"
-				   ActiveUserId="@activeUserId" ActiveUserIdChanged="@UserClicked"
-				   Users="@Users" OnlineUsers="@UserIds"
-				   	@ref="PhotoGridComponent" />
+                    <PhotoGrid Title="All users with their gift counts:"
+                       ActiveUserId="@ActiveUserId" ActiveUserIdChanged="@UserClicked"
+                       Users="@Users" OnlineUsers="@UserIds"
+                           @ref="PhotoGridComponent" />
 
-				<ListViewer CurrentListUserId="@activeUserId" Users="@Users"
-					LoggedInUserId="@loggedInUserId" @ref="ListViewerComponent" />
+                    <ListViewer CurrentListUserId="@ActiveUserId" Users="@Users"
+                        LoggedInUserId="@loggedInUserId" @ref="ListViewerComponent"
+                        UniversalHub="@UniversalHub" />
 
-				<ChatBox OnlineUsersUpdated="@GetOnlineUsers"
-				 PhotoGridComponent="@PhotoGridComponent" />
+                    <ChatBox OnlineUsersUpdated="@GetOnlineUsers"
+                     PhotoGridComponent="@PhotoGridComponent"
+                     UniversalHub="@UniversalHub" />
 
-				</Animate>
-			}
-		}
+                </Animate>
+            }
+        }
 
-	</Authorized>
-	<Authorizing>
-		<div class="full-screen">Checking authorization...</div>
-	</Authorizing>
+    </Authorized>
+    <Authorizing>
+        <div class="full-screen">Checking authorization...</div>
+    </Authorizing>
 </AuthorizeView>

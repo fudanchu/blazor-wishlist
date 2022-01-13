@@ -25,13 +25,11 @@ namespace Wishlist.Client.Shared
 
         private void UpdateUserImageClass()
         {
-            //Console.WriteLine("Calling UpdateUserImageClass with online users: " + String.Join(",",OnlineUsers));
             foreach (var person in Users)
             {
                 person.ActiveClass = "inactive-user";
                 if (person.Id == ActiveUserId)
                 {
-                    //Console.WriteLine($"setting active user class for {ActiveUserId}");
                     person.ActiveClass = "active-user";
                 }
                 if (OnlineUsers.Contains(person.Id))
@@ -39,7 +37,6 @@ namespace Wishlist.Client.Shared
                     person.ActiveClass += " online-now";
                 }
             }
-            //Console.WriteLine("### looped through users and set inactive/ACTIVE class, StateHasChanged");
             StateHasChanged();
         }
         protected override async Task OnInitializedAsync()
@@ -55,12 +52,10 @@ namespace Wishlist.Client.Shared
         }
         public async Task Refresh()
         {
-            //Console.WriteLine($"Refreshing photo grid from Index call...active: {ActiveUserId}");
             await OnInitializedAsync();
         }
         private async Task UpdateActiveUserId(string userId)
         {
-            //Console.WriteLine($"User: {userId}");
             ActiveUserId = userId;
             UpdateUserImageClass();
             await ActiveUserIdChanged.InvokeAsync(ActiveUserId);

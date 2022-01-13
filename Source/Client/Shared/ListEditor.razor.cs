@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.SignalR.Client;
 using Radzen;
+using System;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Wishlist.Shared.Models;
+using Wishlist.Shared.Utility;
 
 namespace Wishlist.Client.Shared
 {
@@ -13,6 +16,8 @@ namespace Wishlist.Client.Shared
         public string UserId { get; set; }
         [Parameter]
         public string ListNote { get; set; }
+        [Parameter]
+        public HubConnection UniversalHub { get; set; }
 
         public int giftId { get; set; }
         Gift gift = new Gift();
@@ -21,11 +26,27 @@ namespace Wishlist.Client.Shared
         private string buttonClass = "btn-success";
         bool isWaitingOnDialogResponse = false;
 
+        private bool isConnected =>
+            UniversalHub.State == HubConnectionState.Connected;
+
+        private async Task GetCurrentGifts()
+        {
+            gifts = await httpClient.GetFromJsonAsync<Gift[]>($"api/Gift/{UserId}");
+        }
+
         protected override async Task OnInitializedAsync()
         {
             gift.UserAskingId = UserId;
-            gifts = await httpClient.GetFromJsonAsync<Gift[]>($"api/Gift/{UserId}");
+            await GetCurrentGifts();
         }
+        async Task NotifyOthersListChanged()
+        {
+            if (isConnected)
+            {
+                await UniversalHub.SendAsync("ListChanged");
+            }
+        }
+
         private void EnterEditState(Gift targetGift)
         {
             buttonText = "Edit";
@@ -74,7 +95,8 @@ namespace Wishlist.Client.Shared
                     if (isConfirmed.Value == true)
                     {
                         await httpClient.DeleteAsync($"api/gift/{targetGift.Id}");
-                        await OnInitializedAsync();
+                        await NotifyOthersListChanged();
+                        await GetCurrentGifts();
                         RefreshParent();
                     }
                 }
@@ -86,13 +108,14 @@ namespace Wishlist.Client.Shared
             if (gift.Id == 0)
             {
                 await httpClient.PostAsJsonAsync("api/Gift", gift);
+                await NotifyOthersListChanged();
                 RefreshParent();
             }
             else
             {
                 await httpClient.PutAsJsonAsync($"api/Gift/{gift.Id}", gift);
             }
-            await OnInitializedAsync();
+            await GetCurrentGifts();
 
             //clear out form for a new entry...
             EnterAddState();

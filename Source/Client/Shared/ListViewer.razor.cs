@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
 using Radzen;
 using System;
@@ -8,6 +9,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Wishlist.Shared.Models;
 using Wishlist.Shared.Models.User;
+using Wishlist.Shared.Utility;
 
 namespace Wishlist.Client.Shared
 {
@@ -19,10 +21,15 @@ namespace Wishlist.Client.Shared
         [Parameter]
         public List<ApplicationUserDTO> Users { get; set; }
 
+        [Parameter]
+        public HubConnection UniversalHub { get; set; }
         List<GiftDTO> viewList { get; set; } = new List<GiftDTO>();
 
         ApplicationUserDTO activePerson { get; set; }
         bool loadFailed, isLoading, isViewingOwnList, isWaitingOnDialogResponse = false;
+
+        private bool isConnected =>
+            UniversalHub.State == HubConnectionState.Connected;
 
         protected override async Task OnInitializedAsync()
         {
@@ -32,6 +39,11 @@ namespace Wishlist.Client.Shared
                 isLoading = true;
 
                 await UpdateActiveList();
+
+                UniversalHub.On("GiftCheckoffUpdate", async () =>
+                {
+                    await UpdateActiveList();
+                });
             }
             catch (System.Net.Http.HttpRequestException e)
             {
@@ -58,6 +70,7 @@ namespace Wishlist.Client.Shared
                         try
                         {
                             await httpClient.PutAsJsonAsync($"api/gift/checkoff", gift);
+                            await NotifyOthersListCheckedOff();
                         }
                         catch
                         {
@@ -65,6 +78,14 @@ namespace Wishlist.Client.Shared
                         }
                     }
                 }
+            }
+        }
+
+        async Task NotifyOthersListCheckedOff()
+        {
+            if (isConnected)
+            {
+                await UniversalHub.SendAsync("GiftCheckoffUpdate");
             }
         }
 
@@ -83,6 +104,7 @@ namespace Wishlist.Client.Shared
                         try
                         {
                             await httpClient.PutAsJsonAsync($"api/gift/reversecheckoff", gift);
+                            await NotifyOthersListCheckedOff();
                             gift.UserBuyingId = "";
                         }
                         catch
@@ -99,7 +121,7 @@ namespace Wishlist.Client.Shared
             viewList = await httpClient.GetFromJsonAsync<List<GiftDTO>>($"api/gift/{CurrentListUserId}");
             try
             {
-                activePerson = Users.Where(p => p.Id == CurrentListUserId).Single();
+                activePerson = Users.Single(p => p.Id == CurrentListUserId);
             }
             catch
             {

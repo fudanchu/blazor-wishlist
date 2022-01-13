@@ -47,15 +47,15 @@ namespace Wishlist.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1e23d1a2-a932-4223-b322-47770dc9bb95",
-                            ConcurrencyStamp = "d15e8ae1-d846-4eed-86ee-391fe1ddd72a",
+                            Id = "2f5b48ad-f6c1-4d38-9b6c-e0093dbe096d",
+                            ConcurrencyStamp = "7d288ce6-d436-4e8e-89ca-9f4201da2468",
                             Name = "Basic",
                             NormalizedName = "BASIC"
                         },
                         new
                         {
-                            Id = "a36a567b-f28a-49c8-8f86-3181271bd93c",
-                            ConcurrencyStamp = "bfec01f0-c4c9-4daa-ac3f-6d5e6360643a",
+                            Id = "c8da6225-b0b5-4302-8670-2fbc3fd925a4",
+                            ConcurrencyStamp = "e5a89864-e58a-4d9e-94fc-8f8f825dbc3b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

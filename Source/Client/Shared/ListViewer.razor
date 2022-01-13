@@ -1,6 +1,8 @@
 ﻿@inject HttpClient httpClient
 @inject IToastService toastService
 @inject DialogService dialogService
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider authStateProvider
 
 <EditForm Model="@viewList">
     @if (loadFailed)
@@ -22,7 +24,9 @@
         if (isViewingOwnList)
         {
             <h3>Edit Your List</h3>
-            <ListEditor UserId="@LoggedInUserId" ListNote="@activePerson.ListNote"></ListEditor>
+            <ListEditor UserId="@LoggedInUserId" 
+                ListNote="@activePerson.ListNote"
+                UniversalHub="@UniversalHub"></ListEditor>
         }
         else if (viewList != null && viewList.Count == 0)
         {

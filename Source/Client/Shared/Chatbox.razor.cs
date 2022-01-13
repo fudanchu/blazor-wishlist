@@ -19,6 +19,8 @@ namespace Wishlist.Client.Shared
 
         [Parameter]
         public EventCallback<string> OnlineUsersUpdated { get; set; }
+        [Parameter]
+        public HubConnection UniversalHub { get; set; }
         struct SpeechSynthesisVoice
         {
             public bool Default { get; set; }
@@ -34,21 +36,20 @@ namespace Wishlist.Client.Shared
         string _voice = "Auto";
         double _voiceSpeed = 1;
 
-        private HubConnection hubConnection;
         private readonly List<string> messages = new();
 
         private string messageInput = "";
         private string currentUserDisplayName;
 
         private bool isReadAloudMode = false;
-        private bool IsConnected =>
-            hubConnection.State == HubConnectionState.Connected;
+        private bool isConnected =>
+            UniversalHub.State == HubConnectionState.Connected;
 
         async Task SendMessage()
         {
             if (messageInput is { Length: > 0 })
             {
-                await hubConnection.SendAsync("SendMessage", currentUserDisplayName, messageInput);
+                await UniversalHub.SendAsync("SendMessage", currentUserDisplayName, messageInput);
                 messageInput = "";
 
                 await js.InvokeVoidAsync("app.updateScroll");
@@ -57,7 +58,7 @@ namespace Wishlist.Client.Shared
         async void OnEnterSubmit(KeyboardEventArgs e)
         {
             bool isEnterKeyPressed = e.Code == "Enter" || e.Code == "NumpadEnter";
-            if (IsConnected && isEnterKeyPressed)
+            if (isConnected && isEnterKeyPressed)
             {
                 await SendMessage();
             }
@@ -65,7 +66,7 @@ namespace Wishlist.Client.Shared
         public async ValueTask DisposeAsync()
         {
             GC.SuppressFinalize(this);
-            await hubConnection.DisposeAsync();
+            await UniversalHub.DisposeAsync();
         }
         private async Task AddMessageToChat(string message)
         {
@@ -90,43 +91,37 @@ namespace Wishlist.Client.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            hubConnection = new HubConnectionBuilder()
-                .WithUrl(navigationManager.ToAbsoluteUri(Globals.HubPath))
-                .WithAutomaticReconnect()
-                .Build();
-            hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
+            UniversalHub.On("ListChanged", async () =>
+            {
+                await commonService.CallAsyncRequestRefresh();
+            });
+            UniversalHub.On<string, string>("ReceiveMessage", async (user, message) =>
             {
                 var encodedMsg = $"{user}: {message}";
                 await AddMessageToChat(encodedMsg);
             });
+
             //when users are arriving or leaving we update their active status
-            hubConnection.On<List<string>, string, string>("UpdateActivity",
+            UniversalHub.On<List<string>, string, string>("UpdateActivity",
                 async (users, userWhoActed, userAction) =>
                 {
                     string updateMessage = $"{userWhoActed} is {userAction}!";
-                    bool isUpdateNewsworthy = messages == null || messages.Count == 0 
+                    bool isUpdateNewsworthy = messages == null || messages.Count == 0
                         || (!messages.Contains(updateMessage));
+
+                    await OnlineUsersUpdated.InvokeAsync(users.ToDelimitedString());
+                    await PhotoGridComponent.Refresh();
 
                     if (isUpdateNewsworthy)
                     {
-                        await OnlineUsersUpdated.InvokeAsync(users.ToDelimitedString());
                         await AddMessageToChat(updateMessage);
-
-                        await PhotoGridComponent.Refresh();
                     }
                 });
 
             var authState = await authStateProvider.GetAuthenticationStateAsync();
             if (authState.User.Identity.IsAuthenticated)
             {
-                try
-                {
-                    await hubConnection.StartAsync();
-                }
-                catch
-                {
-                    Console.WriteLine(">> Trouble starting the hub connection!!");
-                }
+                await UniversalHub.StartAsync();
                 currentUserDisplayName = authState.User.DisplayFirstName();
             }
             else

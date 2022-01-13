@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,19 +13,20 @@ using Wishlist.Shared.Utility;
 
 namespace Wishlist.Client.Pages
 {
-    public partial class Index
+    public partial class Index : IAsyncDisposable
     {
-        private string activeUserId { get; set; }
+        private string ActiveUserId { get; set; }
 
         protected List<ApplicationUserDTO> Users { get; set; }
         protected ListViewer ListViewerComponent { get; set; }
         protected PhotoGrid PhotoGridComponent { get; set; }
         protected ChatBox ChatBoxComponent { get; set; }
         protected List<string> UserIds { get; set; } = new List<string>();
+        protected HubConnection UniversalHub { get; set; }
 
         private async Task UserClicked(string newUserId)
         {
-            activeUserId = newUserId;
+            ActiveUserId = newUserId;
             await ListViewerComponent.ChangeList(newUserId);
         }
         //HACK: since passing list<string> with callback is tricky doing a str conversion and back
@@ -33,7 +35,7 @@ namespace Wishlist.Client.Pages
 
         private async Task RefreshUserData()
         {
-            Users = await client.GetFromJsonAsync<List<ApplicationUserDTO>>($"api/user/All/{activeUserId}");
+            Users = await client.GetFromJsonAsync<List<ApplicationUserDTO>>($"api/user/All/{ActiveUserId}");
             StateHasChanged();
         }
         protected override async Task OnInitializedAsync()
@@ -43,7 +45,12 @@ namespace Wishlist.Client.Pages
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             if (authState.User.Identity.IsAuthenticated)
             {
-                activeUserId = authState.User.GetUserId();   //initialize with the current user's list showing
+                UniversalHub = new HubConnectionBuilder()
+                    .WithUrl(navigationManager.ToAbsoluteUri(Globals.HubPath))
+                    .WithAutomaticReconnect()
+                    .Build();
+
+                ActiveUserId = authState.User.GetUserId();   //initialize with the current user's list showing
 
                 try
                 {
@@ -65,6 +72,13 @@ namespace Wishlist.Client.Pages
         {
             await RefreshUserData();
             await PhotoGridComponent.Refresh();
+        }
+        public async ValueTask DisposeAsync()
+        {
+            if (UniversalHub != null)
+            {
+                await UniversalHub.DisposeAsync();
+            }
         }
     }
 }

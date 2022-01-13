@@ -1,4 +1,5 @@
 ﻿@inject IJSRuntime js
+@inject ICommonService commonService
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authStateProvider
 @implements IAsyncDisposable
@@ -6,13 +7,13 @@
 <section class="chat-ui">
     <span class="oi oi-cog mr-2" onclick="app.toggleSettingsModal()" title="Modify voice settings"></span>
     <span class="oi oi-volume-high mr-2 @(isReadAloudMode ? "active-icon" : "inactive-icon")" @onclick="@ReadMessageAloud" title="Toggles read-aloud mode"></span>
-    <span class="oi oi-chat mr-2 @(IsConnected ? "active-icon" : "inactive-icon")" @onclick="@OnInitializedAsync" title="@(IsConnected ? "Connected to chat" : "Chat offline, click to reconnect")"></span>
+    <span class="oi oi-chat mr-2 @(isConnected ? "active-icon" : "inactive-icon")" @onclick="@OnInitializedAsync" title="@(isConnected ? "Connected to chat" : "Chat offline, click to reconnect")"></span>
     Group Chat:
     <div class="form-group">
         <input class="form-control" @bind-value="messageInput" @bind-value:event="oninput" @onkeydown="@OnEnterSubmit" size="50" />
     </div>
     <div class="form-group top">
-        <button class="btn btn-primary" @onclick="SendMessage" disabled="@(!IsConnected)">Send</button>
+        <button class="btn btn-primary" @onclick="SendMessage" disabled="@(!isConnected)">Send</button>
     </div>
     <ul class="chat-box">
         @foreach (var message in messages)

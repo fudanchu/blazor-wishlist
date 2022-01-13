@@ -10,7 +10,7 @@ using Wishlist.Server.Data;
 namespace Wishlist.Server.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20210213034607_InitWishlist")]
+    [Migration("20220113001718_InitWishlist")]
     partial class InitWishlist
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace Wishlist.Server.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.3")
+                .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -45,6 +45,22 @@ namespace Wishlist.Server.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "2f5b48ad-f6c1-4d38-9b6c-e0093dbe096d",
+                            ConcurrencyStamp = "7d288ce6-d436-4e8e-89ca-9f4201da2468",
+                            Name = "Basic",
+                            NormalizedName = "BASIC"
+                        },
+                        new
+                        {
+                            Id = "c8da6225-b0b5-4302-8670-2fbc3fd925a4",
+                            ConcurrencyStamp = "e5a89864-e58a-4d9e-94fc-8f8f825dbc3b",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -151,107 +167,15 @@ namespace Wishlist.Server.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Wishlist.Shared.Models.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("FamilyId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("LastListUpdate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ListNote")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NickName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<byte[]>("PictureBlob")
-                        .HasMaxLength(1048576)
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("PictureType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ShortName")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers");
-                });
-
             modelBuilder.Entity("Wishlist.Shared.Models.Gift", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<decimal?>("Cost")
-                        .HasColumnType("money");
+                        .HasColumnType("Money");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -284,7 +208,213 @@ namespace Wishlist.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserAskingId");
+
+                    b.HasIndex("UserBuyingId");
+
                     b.ToTable("Gifts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Cost = 39999m,
+                            Description = "Shiny new wheels!",
+                            Name = "New Car",
+                            Rank = 0,
+                            TimeAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TimeBought = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserAskingId = "400d5b1c-b761-4e2b-b0ef-d9909eefc433",
+                            WebLink = "https://www.tesla.com"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Cost = 9m,
+                            Description = "So warm....",
+                            Name = "Socks",
+                            Rank = 1,
+                            TimeAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TimeBought = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserAskingId = "400d5b1c-b761-4e2b-b0ef-d9909eefc433"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Description = "Your best idea!",
+                            Name = "Mystery gift",
+                            Rank = 0,
+                            TimeAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TimeBought = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserAskingId = "400d5b1c-b761-4e2b-b0ef-d9909eefc433"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Description = "Something for our cats",
+                            Name = "Cat toys",
+                            Rank = 0,
+                            TimeAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TimeBought = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserAskingId = "aad29937-f673-426b-b338-fc5b75926c37"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Description = "The best moves you know!",
+                            Name = "Dance moves",
+                            Rank = 0,
+                            TimeAdded = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TimeBought = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserAskingId = "aad29937-f673-426b-b338-fc5b75926c37"
+                        });
+                });
+
+            modelBuilder.Entity("Wishlist.Shared.Models.User.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("LastListUpdate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ListNote")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NickName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("PasswordResetCode")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("PasswordResetTimestamp")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("PictureData")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PictureType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SantaForUserName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "400d5b1c-b761-4e2b-b0ef-d9909eefc433",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "caf86e69-0a26-4f93-b7f5-b8557cf3c49c",
+                            Email = "joe_blow_tester@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Joe",
+                            GroupId = 1,
+                            LastListUpdate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LastName = "Blow",
+                            ListNote = "This is my example list note.  :)",
+                            LockoutEnabled = true,
+                            NickName = "Jman",
+                            NormalizedEmail = "JOE_BLOW_TESTER@GMAIL.COM",
+                            NormalizedUserName = "JOEB",
+                            PasswordHash = "AQAAAAEAACcQAAAAELRLao2z9QK1uTSF9MkS3XFL7kGTJ5peolLcnUgufG9kG8KuRtvypjjKxRL6nPvxUw==",
+                            PasswordResetCode = new Guid("00000000-0000-0000-0000-000000000000"),
+                            PasswordResetTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "4IBP2DQCF5ZMZZAQ2POAGGYHQMDNGT4M",
+                            TwoFactorEnabled = false,
+                            UserName = "JoeB"
+                        },
+                        new
+                        {
+                            Id = "aad29937-f673-426b-b338-fc5b75926c37",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "642aa26e-a0dd-47de-b145-348e8f6845e7",
+                            Email = "jane_doe_tester@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Jane",
+                            GroupId = 2,
+                            LastListUpdate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            LastName = "Doe",
+                            ListNote = "",
+                            LockoutEnabled = true,
+                            NickName = "",
+                            NormalizedEmail = "JANE_DOE_TESTER@GMAIL.COM",
+                            NormalizedUserName = "JANED",
+                            PasswordHash = "AQAAAAEAACcQAAAAEApbnFa0lPJ/4EP2Uo60kyLy8ZBcFAezRYiU9soysXiGH9YjCxGcVxB1ugbGxU5/1w==",
+                            PasswordResetCode = new Guid("00000000-0000-0000-0000-000000000000"),
+                            PasswordResetTimestamp = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "VJNRLNY67OH36WP3OWRTKNXU2TJK3OBN",
+                            TwoFactorEnabled = false,
+                            UserName = "JaneD"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -298,7 +428,7 @@ namespace Wishlist.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Wishlist.Shared.Models.ApplicationUser", null)
+                    b.HasOne("Wishlist.Shared.Models.User.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -307,7 +437,7 @@ namespace Wishlist.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Wishlist.Shared.Models.ApplicationUser", null)
+                    b.HasOne("Wishlist.Shared.Models.User.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -322,7 +452,7 @@ namespace Wishlist.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Wishlist.Shared.Models.ApplicationUser", null)
+                    b.HasOne("Wishlist.Shared.Models.User.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -331,11 +461,28 @@ namespace Wishlist.Server.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Wishlist.Shared.Models.ApplicationUser", null)
+                    b.HasOne("Wishlist.Shared.Models.User.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Wishlist.Shared.Models.Gift", b =>
+                {
+                    b.HasOne("Wishlist.Shared.Models.User.ApplicationUser", "UserAsking")
+                        .WithMany()
+                        .HasForeignKey("UserAskingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Wishlist.Shared.Models.User.ApplicationUser", "UserBuying")
+                        .WithMany()
+                        .HasForeignKey("UserBuyingId");
+
+                    b.Navigation("UserAsking");
+
+                    b.Navigation("UserBuying");
                 });
 #pragma warning restore 612, 618
         }

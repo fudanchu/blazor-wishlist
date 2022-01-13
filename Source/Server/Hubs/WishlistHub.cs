@@ -32,9 +32,9 @@ namespace Wishlist.Server.Hubs
             if (!_onlineUsers.Contains(thisUserId))
             {
                 _onlineUsers.Add(thisUserId);
-                await Clients.All.SendAsync("UpdateActivity", _onlineUsers,
-                    GetCurrentUserDisplayName(), "here");
             }
+            await Clients.All.SendAsync("UpdateActivity", _onlineUsers,
+                    GetCurrentUserDisplayName(), "here");
             await base.OnConnectedAsync();
         }
         private static bool MatchesUser(string userId, string thisUserId)
@@ -48,10 +48,18 @@ namespace Wishlist.Server.Hubs
             if (_onlineUsers.Contains(thisUserId))
             {
                 _onlineUsers.RemoveAll(u=>MatchesUser(u,thisUserId));
-                await Clients.All.SendAsync("UpdateActivity", _onlineUsers,
-                    GetCurrentUserDisplayName(), "leaving");
             }
+            await Clients.All.SendAsync("UpdateActivity", _onlineUsers,
+                    GetCurrentUserDisplayName(), "leaving");
             await base.OnDisconnectedAsync(exception);
+        }
+        public async Task ListChanged()
+        {
+            await Clients.All.SendAsync("ListChanged");
+        }
+        public async Task GiftCheckoffUpdate()
+        {
+            await Clients.All.SendAsync("GiftCheckoffUpdate");
         }
 
         public async Task SendMessage(string user, string message)
