@@ -12,13 +12,17 @@ namespace Wishlist.Server.Models
             builder.HasData(
                 new IdentityRole
                 {
-                    Name = Roles.Basic,
-                    NormalizedName = Roles.Basic.ToUpper()
+                    Name = IdentityRoles.Basic,
+                    NormalizedName = IdentityRoles.Basic.ToUpper(),
+                    Id = IdentityRoles.BasicId,
+                    ConcurrencyStamp = IdentityRoles.BasicId
                 },
                 new IdentityRole
                 {
-                    Name = Roles.Admin,
-                    NormalizedName = Roles.Admin.ToUpper()
+                    Name = IdentityRoles.Admin,
+                    NormalizedName = IdentityRoles.Admin.ToUpper(),
+                    Id = IdentityRoles.AdminId,
+                    ConcurrencyStamp = IdentityRoles.AdminId
                 }
             );
         }

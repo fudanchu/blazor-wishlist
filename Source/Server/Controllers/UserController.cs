@@ -25,7 +25,7 @@ namespace Wishlist.Server.Controllers
     {
         private readonly ApplicationDBContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         public UserController(UserManager<ApplicationUser> userManager,
             ApplicationDBContext context,
@@ -39,7 +39,7 @@ namespace Wishlist.Server.Controllers
         private async Task<ApplicationUser> PopulatePersonData(ApplicationUser person)
         {
             person.ListCount = _context.Gifts.Where(g => g.UserAskingId == person.Id).Count();
-            person.IsAdmin = await _userManager.IsInRoleAsync(person, Roles.Admin);
+            person.IsAdmin = await _userManager.IsInRoleAsync(person, IdentityRoles.Admin);
             if (!string.IsNullOrEmpty(person.SantaForUserName))
             {
                 person.SantaFor = "UNKNOWN!";
@@ -57,7 +57,7 @@ namespace Wishlist.Server.Controllers
             foreach (var person in people)
             {
                 person.ListCount = _context.Gifts.Where(g => g.UserAskingId == person.Id).Count();
-                person.IsAdmin = await _userManager.IsInRoleAsync(person, Roles.Admin);
+                person.IsAdmin = await _userManager.IsInRoleAsync(person, IdentityRoles.Admin);
                 if (!string.IsNullOrEmpty(person.SantaForUserName))
                 {
                     person.SantaFor = "UNKNOWN!";
@@ -150,7 +150,7 @@ namespace Wishlist.Server.Controllers
         {
             string currentUserId = User.GetUserId();
             bool isEditingAnotherUser = currentUserId != person.Id;
-            bool isCurrentUserAnAdmin = User.IsInRole(Roles.Admin);
+            bool isCurrentUserAnAdmin = User.IsInRole(IdentityRoles.Admin);
             if (isEditingAnotherUser && !isCurrentUserAnAdmin)
             {
                 return BadRequest("You cannot edit another user!");
@@ -192,11 +192,11 @@ namespace Wishlist.Server.Controllers
             {
                 if (person.IsAdmin)
                 {
-                    await _userManager.AddToRoleAsync(existingUser, Roles.Admin);
+                    await _userManager.AddToRoleAsync(existingUser, IdentityRoles.Admin);
                 }
                 else
                 {
-                    await _userManager.RemoveFromRoleAsync(existingUser, Roles.Admin);
+                    await _userManager.RemoveFromRoleAsync(existingUser, IdentityRoles.Admin);
                 }
             }
             var userUpdate = await _userManager.UpdateAsync(existingUser);
@@ -206,7 +206,7 @@ namespace Wishlist.Server.Controllers
                 {
                     try
                     {
-                        var emailResult = Notifier.UserEmailUpdated(existingUser);
+                        Notifier.UserEmailUpdated(existingUser);
                     }
                     catch (Exception ex)
                     {
@@ -249,7 +249,7 @@ namespace Wishlist.Server.Controllers
                 return BadRequest("You cannot delete yourself!!");
             }
             var currentUser = await _context.People.FindAsync(currentUserId);
-            if (!(await _userManager.IsInRoleAsync(currentUser, Roles.Admin)))
+            if (!(await _userManager.IsInRoleAsync(currentUser, IdentityRoles.Admin)))
             {
                 return BadRequest("You don't have the power to delete a user!");
             }

@@ -22,10 +22,10 @@ namespace Wishlist.Server.Models
                 var result = await userManager.CreateAsync(user, user.ClearPassword);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, Roles.Basic);
+                    await userManager.AddToRoleAsync(user, IdentityRoles.Basic);
                     if (user.IsAdmin)
                     {
-                        await userManager.AddToRoleAsync(user, Roles.Admin);
+                        await userManager.AddToRoleAsync(user, IdentityRoles.Admin);
                     }
 
                     var notificationResult = Notifier.NewUserAdded(user);

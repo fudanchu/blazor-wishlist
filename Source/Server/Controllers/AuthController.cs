@@ -177,13 +177,13 @@ namespace Wishlist.Server.Controllers
 
         private async Task EnsureRolesExist()
         {
-            if (!await _roleManager.RoleExistsAsync(Roles.Admin))
+            if (!await _roleManager.RoleExistsAsync(IdentityRoles.Admin))
             {
-                await _roleManager.CreateAsync(new IdentityRole { Name = Roles.Admin, NormalizedName = Roles.Admin.ToUpper() });
+                await _roleManager.CreateAsync(new IdentityRole { Name = IdentityRoles.Admin, NormalizedName = IdentityRoles.Admin.ToUpper() });
             }
-            if (!await _roleManager.RoleExistsAsync(Roles.Basic))
+            if (!await _roleManager.RoleExistsAsync(IdentityRoles.Basic))
             {
-                await _roleManager.CreateAsync(new IdentityRole { Name = Roles.Basic, NormalizedName = Roles.Basic.ToUpper() });
+                await _roleManager.CreateAsync(new IdentityRole { Name = IdentityRoles.Basic, NormalizedName = IdentityRoles.Basic.ToUpper() });
             }
         }
 

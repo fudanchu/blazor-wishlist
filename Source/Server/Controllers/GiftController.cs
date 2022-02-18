@@ -108,7 +108,7 @@ namespace Wishlist.Server.Controllers
         public async Task<IActionResult> Post(GiftDTO gift)
         {
             bool isForAnotherUser = User.GetUserId() != gift.UserAskingId;
-            bool isAdmin = User.IsInRole(Roles.Admin);
+            bool isAdmin = User.IsInRole(IdentityRoles.Admin);
             if (isForAnotherUser && !isAdmin)
             {
                 return BadRequest("Only admins can submit gifts for other users!");
@@ -138,7 +138,7 @@ namespace Wishlist.Server.Controllers
             //unless you're an admin user!
             var currentUserId = User.GetUserId();
             bool isYourGift = gift.UserAskingId == currentUserId;
-            bool isAnAdminDeleting = User.IsInRole(Roles.Admin);
+            bool isAnAdminDeleting = User.IsInRole(IdentityRoles.Admin);
             bool invalidDeleteAttempt = !(isYourGift || isAnAdminDeleting);
             if (invalidDeleteAttempt)
             {
