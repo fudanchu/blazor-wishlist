@@ -44,6 +44,14 @@ namespace Wishlist.Client.Shared
                 {
                     await UpdateActiveList();
                 });
+                UniversalHub.On<string>("ListChanged", async (userId) =>
+                {
+                    if (userId == CurrentListUserId)
+                    {
+                        //update the viewed list to reflect any potential edit
+                        await UpdateActiveList();
+                    }
+                });
             }
             catch (System.Net.Http.HttpRequestException e)
             {

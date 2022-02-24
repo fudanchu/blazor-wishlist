@@ -33,7 +33,7 @@
 
                     <PhotoGrid Title="All users with their gift counts:"
                        ActiveUserId="@ActiveUserId" ActiveUserIdChanged="@UserClicked"
-                       Users="@Users" OnlineUsers="@UserIds"
+                       ThisUserId="@loggedInUserId" Users="@Users" OnlineUsers="@UserIds"
                            @ref="PhotoGridComponent" />
 
                     <ListViewer CurrentListUserId="@ActiveUserId" Users="@Users"
