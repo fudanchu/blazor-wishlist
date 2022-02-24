@@ -10,8 +10,8 @@ using Wishlist.Server.Data;
 namespace Wishlist.Server.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20220218225025_HeManSeedData")]
-    partial class HeManSeedData
+    [Migration("20220224191414_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -667,10 +667,10 @@ namespace Wishlist.Server.Migrations
                             ConcurrencyStamp = "a5e68fc4-12a2-4817-85c9-32b99f7899e8",
                             Email = "heman@email.com",
                             EmailConfirmed = false,
-                            FirstName = "He",
+                            FirstName = "He-Man",
                             GroupId = 0,
                             LastListUpdate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Man",
+                            LastName = "Master of the Universe",
                             LockoutEnabled = true,
                             NormalizedEmail = "HEMAN@EMAIL.COM",
                             NormalizedUserName = "HEMAN",
@@ -691,10 +691,10 @@ namespace Wishlist.Server.Migrations
                             ConcurrencyStamp = "a5e68fc4-12a2-4817-85c9-32b99f7899e8",
                             Email = "skeletor@email.com",
                             EmailConfirmed = false,
-                            FirstName = "Sir",
+                            FirstName = "Skeletor",
                             GroupId = 0,
                             LastListUpdate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Skeletor",
+                            LastName = "The Overlord of Skull Mountain",
                             LockoutEnabled = true,
                             NormalizedEmail = "SKELETOR@EMAIL.COM",
                             NormalizedUserName = "SKELETOR",
