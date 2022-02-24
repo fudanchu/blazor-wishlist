@@ -53,9 +53,9 @@ namespace Wishlist.Server.Hubs
                     GetCurrentUserDisplayName(), "leaving");
             await base.OnDisconnectedAsync(exception);
         }
-        public async Task ListChanged()
+        public async Task ListChanged(string userId)
         {
-            await Clients.All.SendAsync("ListChanged");
+            await Clients.All.SendAsync("ListChanged", userId);
         }
         public async Task GiftCheckoffUpdate()
         {

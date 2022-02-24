@@ -91,8 +91,9 @@ namespace Wishlist.Client.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            UniversalHub.On("ListChanged", async () =>
+            UniversalHub.On<string>("ListChanged", async (userId) =>
             {
+                //update the photo grid counts
                 await commonService.CallAsyncRequestRefresh();
             });
             UniversalHub.On<string, string>("ReceiveMessage", async (user, message) =>

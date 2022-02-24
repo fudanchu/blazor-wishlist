@@ -13,6 +13,8 @@ namespace Wishlist.Client.Shared
 
         [Parameter]
         public string ActiveUserId { get; set; }
+        [Parameter]
+        public string ThisUserId { get; set; }
 
         [Parameter]
         public EventCallback<string> ActiveUserIdChanged { get; set; }

@@ -7,7 +7,7 @@
     @if (Users != null && Users.Count > 0)
     {
         <div class="scroll-container">
-            @foreach (var person in Users.OrderByDescending(u => OnlineUsers.Contains(u.Id)))
+            @foreach (var person in Users.OrderByDescending(u => u.Id == ThisUserId).ThenByDescending(u => OnlineUsers.Contains(u.Id)))
             {
                 if (person != null)
                 {

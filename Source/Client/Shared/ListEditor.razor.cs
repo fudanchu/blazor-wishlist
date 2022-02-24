@@ -43,7 +43,7 @@ namespace Wishlist.Client.Shared
         {
             if (isConnected)
             {
-                await UniversalHub.SendAsync("ListChanged");
+                await UniversalHub.SendAsync("ListChanged", UserId);
             }
         }
 
