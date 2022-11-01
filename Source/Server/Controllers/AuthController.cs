@@ -11,6 +11,7 @@ using Wishlist.Server.Models;
 using Wishlist.Shared.Models.Security;
 using Wishlist.Shared.Models.User;
 using Microsoft.Extensions.Logging;
+using Wishlist.Shared.Extensions;
 
 namespace Wishlist.Server.Controllers
 {
@@ -60,7 +61,7 @@ namespace Wishlist.Server.Controllers
             try
             {
                 var guid = Guid.NewGuid();
-                var timeStamp = DateTime.Now;
+                var timeStamp = DateTime.Now.SetKindUtc();
 
                 person.PasswordResetCode = guid;
                 person.PasswordResetTimestamp = timeStamp;
@@ -99,7 +100,7 @@ namespace Wishlist.Server.Controllers
             {
                 bool isResetPasscode = user.PasswordResetCode.ToString() == request.Password.Trim();
                 bool isPasscodeFresh = DateTime.Compare(
-                    DateTime.Now,
+                    DateTime.Now.SetKindUtc(),
                     user.PasswordResetTimestamp.AddMinutes(
                         LoginRequest.MinutesBeforeTempPasswordExpires)) <= 0;
                 if (isResetPasscode)

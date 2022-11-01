@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <Version>2022.02.24.1357</Version>
+    <Version>2022.11.01.1309</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,16 +23,16 @@
     <PackageReference Include="BlazorAnimate" Version="3.0.0" />
     <PackageReference Include="Blazored.Toast" Version="3.1.2" />
     <PackageReference Include="Chronos.Blazor.Cropper" Version="1.1.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="5.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.9" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.10" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Radzen.Blazor" Version="3.9.9" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
-    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

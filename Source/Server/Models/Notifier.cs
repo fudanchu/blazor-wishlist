@@ -2,6 +2,7 @@
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
+using Wishlist.Shared.Extensions;
 using Wishlist.Shared.Models.User;
 
 namespace Wishlist.Server.Models
@@ -44,7 +45,7 @@ namespace Wishlist.Server.Models
         {
             var templateList = new List<KeyValuePair<string, string>>();
 
-            var additionalDetails = "Added at " + DateTime.Now;
+            var additionalDetails = "Added at " + DateTime.Now.SetKindUtc();
             if (!string.IsNullOrEmpty(adminAdding))
             {
                 additionalDetails += " by admin [" + adminAdding + "]";

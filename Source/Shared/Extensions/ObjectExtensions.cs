@@ -7,6 +7,7 @@ using Wishlist.Shared.Models.User;
 using AutoMapper;
 using Wishlist.Shared.Utility;
 using Wishlist.Shared.Models;
+using System;
 
 namespace Wishlist.Shared.Extensions
 {
@@ -16,6 +17,23 @@ namespace Wishlist.Shared.Extensions
         {
             PropertyNameCaseInsensitive = true
         };
+
+        public static DateTime SetKindUtc(this DateTime dateTime)
+        {
+            if (dateTime.Kind == DateTimeKind.Utc) { return dateTime; }
+            return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+        }
+        public static DateTime? SetKindUtc(this DateTime? dateTime)
+        {
+            if (dateTime.HasValue)
+            {
+                return dateTime.Value.SetKindUtc();
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         public static string ToDelimitedString(this List<string> list) =>
             string.Join(",", list);

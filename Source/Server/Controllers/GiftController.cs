@@ -93,7 +93,7 @@ namespace Wishlist.Server.Controllers
             existingGift.WebLink = gift.WebLink;
 
             var userAsking = await _context.People.FindAsync(gift.UserAskingId);
-            userAsking.LastListUpdate = DateTime.Now;
+            userAsking.LastListUpdate = DateTime.Now.SetKindUtc();
             await _context.SaveChangesAsync();
 
             //_context.Entry(gift).State = EntityState.Modified;
@@ -114,11 +114,11 @@ namespace Wishlist.Server.Controllers
                 return BadRequest("Only admins can submit gifts for other users!");
             }
 
-            gift.TimeAdded = DateTime.Now;
+            gift.TimeAdded = DateTime.Now.SetKindUtc();
             _context.Gifts.Add(gift.FromDTO());
 
             var userAsking = await _context.People.FindAsync(gift.UserAskingId);
-            userAsking.LastListUpdate = DateTime.Now;
+            userAsking.LastListUpdate = DateTime.Now.SetKindUtc();
             await _context.SaveChangesAsync();
 
             return Ok(gift.Id);
@@ -147,7 +147,7 @@ namespace Wishlist.Server.Controllers
             _context.Gifts.Remove(gift);
 
             var userAsking = await _context.People.FindAsync(gift.UserAskingId);
-            userAsking.LastListUpdate = DateTime.Now;
+            userAsking.LastListUpdate = DateTime.Now.SetKindUtc();
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -188,7 +188,7 @@ namespace Wishlist.Server.Controllers
             if (!isYourGift && (isAvailableForCheckout || isCheckedOutToYou))
             {
                 existingGift.UserBuyingId = currentUserId;
-                existingGift.TimeBought = DateTime.Now;
+                existingGift.TimeBought = DateTime.Now.SetKindUtc();
                 await _context.SaveChangesAsync();
             }
             else
